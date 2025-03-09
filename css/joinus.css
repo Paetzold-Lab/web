@@ -1,0 +1,252 @@
+/*
+ * Paetzold Lab - Join Us Page Styles
+ * 
+ * Contents:
+ * 1. Page Layout
+ * 2. Hero Section
+ * 3. Position Cards
+ * 4. Card Content Styles
+ * 5. Responsive Styles
+ */
+
+/* ========== 1. PAGE LAYOUT ========== */
+.join-page {
+  padding-top: calc(71px + 2rem);
+  min-height: calc(100vh - 71px);
+  background: #fff;
+}
+
+/* ========== 2. HERO SECTION ========== */
+.hero-section {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(45deg, #f3f3f3, #fff);
+  position: relative;
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: #000;
+  border-radius: 2px;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+  color: #000;
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* ========== 3. POSITION CARDS ========== */
+.positions-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.position-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.position-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 30px rgba(0,0,0,0.15);
+}
+
+/* Card color accents */
+.position-card.postdoc {
+  border-top: 5px solid #1a73e8;
+}
+
+.position-card.phd {
+  border-top: 5px solid #34a853;
+}
+
+.position-card.visiting {
+  border-top: 5px solid #ea4335;
+}
+
+/* ========== 4. CARD CONTENT STYLES ========== */
+.position-content {
+  padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.position-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #000;
+  position: relative;
+  padding-bottom: 0.8rem;
+}
+
+.position-content h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background-color: currentColor;
+}
+
+.position-card.postdoc h2::after {
+  background-color: #1a73e8;
+}
+
+.position-card.phd h2::after {
+  background-color: #34a853;
+}
+
+.position-card.visiting h2::after {
+  background-color: #ea4335;
+}
+
+.position-content p {
+  margin-bottom: 1.2rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.position-content ul {
+  list-style: none;
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.position-content ul li {
+  margin-bottom: 0.5rem;
+  position: relative;
+  line-height: 1.4;
+}
+
+.position-content ul li:before {
+  content: "•";
+  color: #000;
+  font-weight: bold;
+  position: absolute;
+  left: -1rem;
+}
+
+.position-card.postdoc ul li:before {
+  color: #1a73e8;
+}
+
+.position-card.phd ul li:before {
+  color: #34a853;
+}
+
+.position-card.visiting ul li:before {
+  color: #ea4335;
+}
+
+.requirements {
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.apply-btn {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: transform 0.3s;
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.apply-btn:hover {
+  transform: translateY(-2px);
+}
+
+.link-emphasis {
+  text-decoration: underline;
+  font-weight: 600;
+  color: #000;
+  transition: opacity 0.3s;
+}
+
+.link-emphasis:hover {
+  opacity: 0.7;
+}
+
+/* ========== 5. RESPONSIVE STYLES ========== */
+@media (max-width: 768px) {
+  .positions-section {
+    grid-template-columns: 1fr;
+    padding: 2rem 1rem;
+  }
+  
+  .hero-section {
+    padding: 2rem 1rem;
+  }
+  
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-section p {
+    font-size: 1rem;
+  }
+  
+  .position-content {
+    padding: 1.5rem;
+  }
+  
+  .position-content h2 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 1.5rem 1rem;
+  }
+  
+  .positions-section {
+    gap: 1.5rem;
+    padding: 1.5rem 1rem;
+  }
+  
+  .position-content {
+    padding: 1.2rem;
+  }
+  
+  .position-content ul {
+    padding-left: 0.8rem;
+  }
+  
+  .position-content ul li:before {
+    left: -0.8rem;
+  }
+}
