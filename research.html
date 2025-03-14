@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Research - Paetzold Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Paetzold Lab">
+  <link rel="icon" type="image/png" href="images/web_logo.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/research.css">
+  <script src="js/components.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script type="module" src="js/publications.js" defer></script>
+</head>
+<body>
+  <!-- Component placeholders -->
+  <div id="header-placeholder"></div>
+  <div id="search-overlay-placeholder"></div>
+      
+  <main class="research-page">
+    <section class="publications" id="publications">
+      <div class="pub-controls">
+        <!-- Top row: Sort controls and search -->
+        <div class="pub-controls-top">
+          <div class="pub-sort">
+            <select id="sort-select">
+              <option value="year">Sort by Year</option>
+              <option value="citations">Sort by Citations</option>
+              <option value="title">Sort by Title</option>
+            </select>
+            <button id="sort-direction" aria-label="Sort direction">↓</button>
+          </div>
+          
+          <div class="pub-search">
+            <input type="text" placeholder="Search publications...">
+          </div>
+        </div>
+        
+        <!-- Bottom row: Filter buttons -->
+        <div class="pub-filters">
+          <button class="active" data-filter="all">All</button>
+          <button data-filter="medical-imaging">Medical Imaging</button>
+          <button data-filter="gnn">GNN</button>
+          <button data-filter="generative">Generative AI</button>
+          <button data-filter="topology">Topology</button>
+          <button data-filter="microscopy">Microscopy</button>
+        </div>
+      </div>
+
+      <div class="pub-grid" id="publications-container">
+        <!-- Publications will be dynamically inserted here -->
+      </div>
+
+      <div class="pagination">
+        <button class="pagination-btn prev" disabled>
+          <span class="arrow">←</span>
+        </button>
+        <div class="page-numbers"></div>
+        <button class="pagination-btn next">
+          <span class="arrow">→</span>
+        </button>
+      </div>
+    </section>
+    
+    <!-- Collaborators Section -->
+    <section class="collaborators">
+      <div class="section-header">
+        <h2>Our Collaborators</h2>
+      </div>
+      <div class="collab-wrapper">
+        <button class="scroll-btn prev" aria-label="Previous collaborators">
+          <span>←</span>
+        </button>
+        <div class="collab-container">
+          <div class="collab-grid">
+            <a href="https://aim-lab.io/" class="collab-item" target="_blank">
+                <img src="images/collaborators/tum-logo.png" alt="Lab for AI in Medicine">
+                <div class="collab-info">
+                    <h3>Lab for AI in Medicine</h3>
+                    <p>Technical University of Munich</p>
+                </div>
+            </a>
+
+            <a href="https://sabuncu.engineering.cornell.edu/" class="collab-item" target="_blank">
+                <img src="images/collaborators/cornell-bnw.png" alt="Sabuncu Lab">
+                <div class="collab-info">
+                    <h3>Sabuncu Lab</h3>
+                    <p>Cornell University</p>
+                </div>
+            </a>
+
+            <a href="https://mini-cornell.github.io/" class="collab-item" target="_blank">
+                <img src="images/collaborators/qingyulab_logo.png" alt="MINI Lab">
+                <div class="collab-info">
+                    <h3>MINI Lab</h3>
+                    <p>Weill Cornell Medicine</p>
+                </div>
+            </a>
+          </div>
+        </div>
+        <button class="scroll-btn next" aria-label="Next collaborators">
+          <span>→</span>
+        </button>
+      </div>
+    </section>
+  </main>
+  
+  <div id="footer-placeholder"></div>
+</body>
+</html>

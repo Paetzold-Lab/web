@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Team - Paetzold Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Paetzold Lab">
+  <link rel="icon" type="image/png" href="images/web_logo.png">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/research.css">
+  <style>
+    /* Optimize team card layout */
+    .team-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      justify-content: center;
+    }
+    
+    .team-card {
+      width: 200px;
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+      margin-bottom: 2rem;
+    }
+
+    /* Ensure consistent width for collaborators section */
+    .collaborators {
+      padding: 6rem 0 4rem;
+      background: #f8f9fa;
+      width: 100%;
+    }
+
+    .collab-wrapper {
+      position: relative;
+      max-width: var(--max-width-content);
+      margin: 0 auto;
+      padding: 0 60px;
+    }
+
+    @media (max-width: 768px) {
+      .team-card {
+        width: 180px;
+      }
+    }
+  </style>
+  <script src="js/components.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <!-- Component placeholders -->
+  <div id="header-placeholder"></div>
+  <div id="search-overlay-placeholder"></div>
+  
+  <main class="team-page">
+    <!-- PI Section -->
+    <section class="team-section">
+      <h2>Principal Investigator</h2>
+      <div class="team-grid">
+        <a href="pi.html" class="team-card">
+          <img src="images/portrait/Johannes.jpg" alt="Johannes C. Paetzold" />
+          <h3>Johannes C. Paetzold</h3>
+        </a>
+      </div>
+    </section>
+
+    <!-- Postdoctoral Researchers Section -->
+    <!-- <section class="team-section">
+      <h2>Postdoctoral Researcher</h2>
+      <div class="team-grid">
+
+      </div>
+    </section> -->
+
+    <!-- PhD Students Section -->
+    <section class="team-section">
+      <h2>PhD Students</h2>
+      <div class="team-grid">
+        
+        <a href="https://aim-lab.io/author/laurin-lux/" class="team-card">
+          <img src="images/portrait/Laurin.jpg" alt="Laurin Lux" />
+          <h3>Laurin Lux</h3>
+        </a>
+        
+        <a href="https://aim-lab.io/author/alexander-berger/" class="team-card">
+          <img src="images/portrait/Alex.png" alt="Alexander Berger" />
+          <h3>Alexander Berger</h3>
+        </a>
+
+        <a href="https://chenjun-li.github.io/" class="team-card">
+          <img src="images/portrait/Matt.jpeg" alt="Matt (Chenjun) Li" />
+          <h3>Matt (Chenjun) Li</h3>
+        </a>
+        
+      </div>
+    </section>
+
+    <!-- Alumni Section -->
+     <!--  -->
+    <!-- <section class="team-section">
+      <h2>Alumni</h2>
+      <div class="team-grid">
+      </div>
+    </section> -->
+   <!-- Collaborators Section -->
+   <section class="collaborators">
+    <div class="section-header">
+      <h2>Our Collaborators</h2>
+    </div>
+    <div class="collab-wrapper">
+      <button class="scroll-btn prev" aria-label="Previous collaborators">
+        <span>←</span>
+      </button>
+      <div class="collab-container">
+        <div class="collab-grid">
+          <a href="https://aim-lab.io/" class="collab-item" target="_blank">
+              <img src="images/collaborators/tum-logo.png" alt="Lab for AI in Medicine">
+              <div class="collab-info">
+                  <h3>Lab for AI in Medicine</h3>
+                  <p>Technical University of Munich</p>
+              </div>
+          </a>
+
+          <a href="https://sabuncu.engineering.cornell.edu/" class="collab-item" target="_blank">
+              <img src="images/collaborators/cornell-bnw.png" alt="Sabuncu Lab">
+              <div class="collab-info">
+                  <h3>Sabuncu Lab</h3>
+                  <p>Cornell University</p>
+              </div>
+          </a>
+
+          <a href="https://mini-cornell.github.io/" class="collab-item" target="_blank">
+              <img src="images/collaborators/qingyulab_logo.png" alt="MINI Lab">
+              <div class="collab-info">
+                  <h3>MINI Lab</h3>
+                  <p>Weill Cornell Medicine</p>
+              </div>
+          </a>
+        </div>
+      </div>
+      <button class="scroll-btn next" aria-label="Next collaborators">
+        <span>→</span>
+      </button>
+    </div>
+  </section>  
+  </main>
+
+  <div id="footer-placeholder"></div>
+</body>
+</html>

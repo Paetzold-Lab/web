@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Paetzold Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Paetzold Lab">
+  <link rel="icon" type="image/png" href="images/web_logo.png">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/contact.css" />
+  <link rel="stylesheet" href="css/research_show.css" />
+  <script src="js/components.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/featured-publications.js" defer></script>
+</head>
+<body>
+  <!-- Component placeholders -->
+  <div id="header-placeholder"></div>
+  <div id="search-overlay-placeholder"></div>
+  <div id="legal-notice-overlay-placeholder"></div>
+
+  <!-- ========== HERO CAROUSEL (Large Video Slides) ========== -->
+  <section class="hero-carousel">
+    <div class="carousel-wrapper" id="carousel-wrapper">
+      <!-- Slide 1 -->
+      <div class="carousel-slide">
+        <div class="video-bg">
+          <video id="heroVideo" src="videos/medical_imaging.mp4" autoplay muted loop playsinline></video>
+        </div>
+        <div class="slide-content">
+          <h2>Medical Imaging</h2>
+          <a href="research.html" class="hero-btn">Explore our research</a>
+        </div>
+      </div>
+      <!-- Slide 2 -->
+      <div class="carousel-slide">
+        <div class="video-bg">
+          <video src="videos/GNN.mp4" autoplay muted loop playsinline></video>
+        </div>
+        <div class="slide-content">
+          <h2>Graph Neural Networks</h2>
+          <div class="hero-btn-container">
+            <a href="research.html" class="hero-btn">Explore our research</a>
+          </div>
+        </div>
+      </div>
+      <!-- Slide 3 -->
+      <div class="carousel-slide">
+        <div class="video-bg">
+          <video src="videos/GenAI.mp4" autoplay muted loop playsinline></video>
+        </div>
+        <div class="slide-content">
+          <h2>Gen AI</h2>
+          <div class="hero-btn-container">
+            <a href="research.html" class="hero-btn">Explore our research</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel indicators -->
+    <div class="carousel-indicators" id="carousel-indicators">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+    <!-- Carousel arrows -->
+    <button class="carousel-arrow left" id="carousel-prev"><span>&lt;</span></button>
+    <button class="carousel-arrow right" id="carousel-next"><span>&gt;</span></button>
+  </section>
+
+  <!-- Research Showcase Section -->
+  <section class="research-showcase">
+    <div class="research-intro">
+      <h2>AI x Medicine</h2>
+      <p class="research-description">
+        Welcome to our lab page!! We are developing new ideas and machine learning methods that address key challenges in computer vision and healthcare. Situated in Manhattan, within the Department of Radiology at Weill Cornell Medicine and closely affiliated with Cornell Tech, we focus on interpretable medical image analysis,  topological deep learning, graph neural networks and generative models . Our research integrates multimodal data—including clinical images, biological data, and patient histories to advance diverse applications in medical diagnosis, biology and neuroscience.
+      </p>
+    </div>
+    
+    <!-- <div class="research-grid">
+      <div class="research-item" data-speed="1.2">
+        <div class="research-item-bg">
+          <img src="images/research_show/medical_imaging.jpg" alt="Medical AI">
+        </div>
+        <div class="research-content">
+          <h3>Biomedical Image Analysis</h3>
+        </div>
+      </div>
+
+      <div class="research-item" data-speed="1.4">
+        <div class="research-item-bg">
+          <img src="images/research_show/gnn1.png" alt="GNN">
+        </div>
+        <div class="research-content">
+          <h3>Geometric Deep Learning</h3>
+        </div>
+      </div>
+
+      <div class="research-item" data-speed="1.1">
+        <div class="research-item-bg">
+          <img src="images/research_show/genAI.jpg" alt="Generative AI">
+        </div>
+        <div class="research-content">
+          <h3>Generative Models</h3>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- ========== Featured Publications Section ========== -->
+  <section class="publications-showcase">
+    <!-- <div class="section-header">
+      <h2>Featured Publications</h2>
+    </div> -->
+    
+    <div class="pub-featured-wrapper">
+      <button class="pub-scroll-btn left" id="pub-left">←</button>
+      <div class="pub-featured">
+        <!-- Publications will be dynamically inserted here -->
+      </div>
+      <button class="pub-scroll-btn right" id="pub-right">→</button>
+    </div>
+
+    <div class="button-container">
+      <a href="research.html" class="view-all-btn">
+        View All Publications
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z"/>
+        </svg>
+      </a>
+    </div>
+
+<!-- ========== GALLERY CARDS ========== -->
+<section class="small-cards-row auto-scroll-gallery">
+  <div class="section-header">
+    <h2>Gallery</h2>
+  </div>
+  <div class="gallery-overflow-container">
+    <div class="cards-scroll-wrapper infinite-scroll">
+      <!-- Original cards -->
+      <div class="small-card">
+        <a class="small-card-image">
+          <img src="images/team/wacv_0.jpg" alt="Group photo" />
+        </a>
+        <div class="card-year">WACV 2025</div>
+      </div>
+      <div class="small-card">
+        <a class="small-card-image">
+          <img src="images/team/wacv_1.jpeg" alt="Group photo" />
+        </a>
+        <div class="card-year">WACV 2025</div>
+      </div>
+      <div class="small-card">
+        <a class="small-card-image">
+          <img src="images/team/wacv_2.png" alt="Group photo" />
+        </a>
+        <div class="card-year">WACV 2025</div>
+      </div>
+      <div class="small-card">
+        <a class="small-card-image">
+          <img src="images/team/2024_01.jpg" alt="Group photo" />
+        </a>
+        <div class="card-year">MICCAI 2024</div>
+      </div>
+      <div class="small-card">
+        <a class="small-card-image">
+          <img src="images/team/MICCAI.jpeg" alt="Group photo" />
+        </a>
+        <div class="card-year">MICCAI 2024</div>
+      </div>
+      <div class="small-card">
+        <a class="small-card-image">
+          <img src="images/team/campus.jpeg" alt="Group photo" />
+        </a>
+        <div class="card-year">The Tech campus</div>
+      </div>
+      <div class="small-card">
+        <a class="small-card-image">
+          <img src="images/team/Cornell-Tech.jpg" alt="Cornell Tech" />
+        </a>
+        <div class="card-year">The Tech campus</div>
+      </div>
+  </div>
+</section>
+
+  <!-- ========== CONTACT SECTION ========== -->
+  <section class="contact-section">
+    <div class="contact-container">
+      <section class="contact-form-section">
+        <h1 class="typing-title">Send us a message</h1>
+        <form class="contact-form" id="contact-form">
+          <div class="form-group">
+            <input type="text" id="name" placeholder=" " required>
+            <label for="name">Your Name</label>
+            <span class="focus-border"></span>
+          </div>
+          
+          <div class="form-group">
+            <input type="email" id="email" placeholder=" " required>
+            <label for="email">Your Email</label>
+            <span class="focus-border"></span>
+          </div>
+          
+          <div class="form-group">
+            <textarea id="message" placeholder=" " required></textarea>
+            <label for="message">Your Message</label>
+            <span class="focus-border"></span>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            Send 
+            <span class="btn-hover"></span>
+          </button>
+        </form>
+      </section>
+
+      <section class="map-section">
+        <div class="map-container">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.29052440226!2d-73.95881038718849!3d40.75563443482199!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259ba857dd7a7%3A0xa9377b1a9772ce08!2sCornell%20Tech!5e0!3m2!1sen!2sus!4v1736203182370!5m2!1sen!2sus"
+            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+</body>
+</html>
+

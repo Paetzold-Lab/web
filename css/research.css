@@ -1,0 +1,712 @@
+/*
+ * Paetzold Lab - Research Page Styles
+ * 
+ * Contents:
+ * 1. Page Layout
+ * 2. Publications Controls
+ * 3. Publication Cards
+ * 4. Pagination
+ * 5. Collaborators Section
+ * 6. Responsive Styles
+ */
+
+/* ========== 1. PAGE LAYOUT ========== */
+.research-page {
+  padding-top: 71px;
+  background: #fff;
+}
+
+.publications {
+  padding: 6rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ========== 2. PUBLICATIONS CONTROLS ========== */
+.pub-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+/* Top row: Sort and search */
+.pub-controls-top {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  align-items: center;
+}
+
+/* Sort controls container */
+.pub-sort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 200px;
+  flex: 0 0 auto;
+}
+
+/* Search container */
+.pub-search {
+  flex: 1; /* Take up remaining space */
+}
+
+.pub-search input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  height: 40px;
+}
+
+.pub-search input:hover {
+  border-color: #999;
+}
+
+.pub-search input:focus {
+  outline: none;
+  border-color: #100303;
+  box-shadow: 0 0 0 2px rgba(25, 26, 27, 0.25);
+}
+
+/* Filter buttons container */
+.pub-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.pub-filters button {
+  padding: 0.7rem 1.2rem;
+  border: 1px solid #000;
+  background: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+  flex: 0 1 auto; /* Don't force grow but allow shrink */
+  text-align: center;
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+.pub-filters button:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.pub-filters button.active {
+  background: #000;
+  color: #fff;
+}
+
+#sort-select {
+  appearance: none;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.8rem 2rem 0.8rem 1rem;
+  font-size: 0.9rem;
+  width: 200px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+}
+
+#sort-select:hover {
+  border-color: #999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#sort-select:focus {
+  outline: none;
+  border-color: #131414;
+  box-shadow: 0 0 0 2px rgba(0, 0, 1, 0.25);
+}
+
+#sort-direction {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+#sort-direction:hover {
+  border-color: #999;
+  background: #f8f8f8;
+  transform: translateY(-1px);
+}
+
+/* ========== 3. PUBLICATION CARDS ========== */
+.pub-grid {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+
+.pub-item {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.pub-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.pub-thumb {
+  overflow: hidden;
+  border-radius: 8px;
+  height: 100%;
+}
+
+.pub-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.pub-item:hover .pub-thumb img {
+  transform: scale(1.05);
+}
+
+.pub-content h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  color: #000;
+}
+
+.pub-content .authors {
+  color: #666;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.pub-content .venue {
+  font-size: 0.9rem;
+  color: #000;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  padding: 0.3rem 0.8rem;
+  background: #f8f8f8;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.pub-content .abstract {
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.pub-links {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.pub-links a {
+  padding: 0.5rem 1rem;
+  border: 1px solid #000;
+  color: #000;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pub-links a:hover {
+  background: #000;
+  color: #fff;
+}
+
+.btn-link {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-link.pdf {
+  background-color: #000000;
+  color: white;
+}
+
+.btn-link.code {
+  background-color: #000000;
+  color: white;
+}
+
+.citations-count {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Category badges styling */
+.pub-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.5rem 0;
+}
+
+.pub-category-badge {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  background: #f0f0f0;
+  white-space: nowrap; /* Keep individual badge text on one line */
+  display: inline-block;
+  margin: 0.15rem 0.15rem 0.15rem 0;
+}
+
+/* Category-specific colors */
+.pub-category-badge.medical-imaging {
+  background-color: #e1f5fe;
+  color: #0277bd;
+}
+
+.pub-category-badge.gnn {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.pub-category-badge.generative {
+  background-color: #fff8e1;
+  color: #ff8f00;
+}
+
+.pub-category-badge.topology {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.pub-category-badge.microscopy {
+  background-color: #e0f7fa;
+  color: #00838f;
+}
+
+.pub-category-badge.other {
+  background-color: #f5f5f5;
+  color: #616161;
+}
+
+/* Author styling */
+.authors {
+  color: #666;
+  margin: 5px 0;
+  line-height: 1.5;
+}
+
+.authors .lab-member {
+  color: #474444;
+  font-weight: 700;
+}
+
+/* Abstract styling */
+.abstract {
+  color: #444;
+  line-height: 1.5;
+  margin: 10px 0;
+}
+
+/* No results state */
+.no-results {
+  padding: 3rem;
+  text-align: center;
+  background: #f9f9f9;
+  border-radius: 8px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* ========== 4. PAGINATION ========== */
+.pagination {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.pagination-btn {
+  padding: 0.8rem 1.5rem;
+  border: 1px solid #000;
+  background: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1.2rem;
+  border-radius: 4px;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #000;
+  color: #fff;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.page-numbers span {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+.page-numbers span:hover:not(.ellipsis) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.page-numbers span.active {
+  background: #000;
+  color: #fff;
+}
+
+.page-numbers span.ellipsis {
+  cursor: default;
+}
+
+/* ========== 5. COLLABORATORS SECTION ========== */
+.collaborators {
+  padding: 6rem 0 4rem;
+  background: #f8f9fa;
+  overflow: hidden;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 0 1rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+}
+
+.section-header h2:after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #000;
+}
+
+.collab-wrapper {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  padding: 1rem;
+}
+
+.scroll-btn:hover {
+  background: #000;
+  color: white;
+  border-color: #000;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.scroll-btn.prev {
+  left: 10px;
+}
+
+.scroll-btn.next {
+  right: 10px;
+}
+
+.collab-container {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding: 1rem 2rem;
+  position: relative;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.collab-container::-webkit-scrollbar {
+  display: none;
+}
+
+.collab-grid {
+  display: flex;
+  gap: 2rem;
+  padding-bottom: 1rem;
+  width: max-content;
+  padding: 1rem;
+}
+
+.collab-item {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 300px;
+  height: 250px;
+  flex-shrink: 0;
+  min-width: 280px;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.collab-item:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.collab-item img {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  transition: transform 0.3s;
+}
+
+.collab-item:hover img {
+  transform: scale(1.05);
+}
+
+.collab-info {
+  overflow: hidden;
+}
+
+.collab-info h3 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #000;
+}
+
+.collab-info p {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ========== 6. RESPONSIVE STYLES ========== */
+@media (max-width: 768px) {
+  .pub-controls {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .pub-controls-top {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .pub-sort {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  #sort-select {
+    flex: 1;
+    width: calc(100% - 50px);
+    height: 44px;
+  }
+
+  #sort-direction {
+    width: 44px;
+    height: 44px;
+  }
+
+  .pub-search {
+    width: 100%;
+  }
+
+  .pub-search input {
+    height: 44px;
+  }
+
+  .pub-filters {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .pub-filters button {
+    flex: 1 1 auto;
+    min-width: 120px;
+    padding: 0.7rem 0.5rem;
+  }
+
+  .pub-item {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .pub-thumb {
+    height: 200px;
+  }
+
+  .pub-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .pub-meta {
+    flex-wrap: wrap;
+  }
+
+  .venue-name, .year {
+    width: 100%;
+    text-align: center;
+  }
+
+  .pub-links {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .btn-link {
+    width: auto;
+    text-align: center;
+    padding: 0.8rem 1rem;
+  }
+  
+  .collab-wrapper {
+    padding: 0 40px;
+  }
+  
+  .section-header h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .publications {
+    padding: 3rem 1rem;
+  }
+
+  .pub-filters button {
+    min-width: 100%;
+  }
+
+  .pub-thumb {
+    height: 150px;
+  }
+  
+  .pagination {
+    margin-top: 2rem;
+    gap: 0.8rem;
+  }
+  
+  .pagination-btn {
+    padding: 0.5rem 1rem;
+  }
+  
+  .page-numbers span {
+    width: 30px;
+    height: 30px;
+    font-size: 0.9rem;
+  }
+  
+  .collab-wrapper {
+    padding: 0 30px;
+  }
+  
+  .scroll-btn {
+    width: 30px;
+    height: 30px;
+    padding: 0.5rem;
+  }
+  
+  .collab-item {
+    width: 260px;
+    padding: 1.5rem;
+    min-width: 260px;
+  }
+}
