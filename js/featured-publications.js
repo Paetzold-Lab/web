@@ -108,35 +108,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         // Render publications
-        pubContainer.innerHTML = pubs.map(pub => `
-            <article class="pub-card" data-aos="fade-up">
-                <div class="pub-card-image">
-                    <img src="${pub.thumbnail || './images/publications/default.png'}" alt="${pub.title}" loading="lazy">
-                </div>
-                <div class="pub-card-content">
-                    <div class="pub-card-meta">
-                        ${pub.categories && pub.categories.length > 0 ? 
-                            pub.categories.slice(0, 5).map(cat => 
-                                `<span class="pub-card-badge ${cat}" title="${getCategoryName(cat, pub)}">${getCategoryName(cat, pub)}</span>`
-                            ).join('') : 
-                            `<span class="pub-card-badge">${pub.primary_category || 'Research'}</span>`
-                        }
-                        <span class="pub-card-badge year">${pub.year || ''}</span>
-                    </div>
-                    <h3>${pub.title}</h3>
-                    <div class="pub-metrics">
-                        ${pub.citations ? `
-                            <span class="metric">
-                                <svg width="16" height="16" viewBox="0 0 24 24">
-                                    <path d="M12 21l-8-9h16l-8 9z"/>
-                                </svg>
-                                ${pub.citations} citations
-                            </span>
-                        ` : ''}
-                    </div>
-                </div>
-            </article>
-        `).join('');
+        pubContainer.innerHTML = pubs.map(pub => {
+            // Get the paper URL from whatever source is available
+            const paperUrl = pub.url || pub.scholar_link || pub.links?.scholar || pub.links?.pdf || '#';
+            
+            return `
+                <article class="pub-card" data-aos="fade-up">
+                    <a href="${paperUrl}" target="_blank" rel="noopener" class="pub-card-link">
+                        <div class="pub-card-image">
+                            <img src="${pub.thumbnail || './images/publications/default.png'}" alt="${pub.title}" loading="lazy">
+                        </div>
+                        <div class="pub-card-content">
+                            <div class="pub-card-meta">
+                                ${pub.categories && pub.categories.length > 0 ? 
+                                    pub.categories.slice(0, 5).map(cat => 
+                                        `<span class="pub-card-badge ${cat}" title="${getCategoryName(cat, pub)}">${getCategoryName(cat, pub)}</span>`
+                                    ).join('') : 
+                                    `<span class="pub-card-badge">${pub.primary_category || 'Research'}</span>`
+                                }
+                                <span class="pub-card-badge year">${pub.year || ''}</span>
+                            </div>
+                            <h3>${pub.title}</h3>
+                            <div class="pub-metrics">
+                                ${pub.citations ? `
+                                    <span class="metric citations">
+                                        <svg width="16" height="16" viewBox="0 0 24 24">
+                                            <path d="M12 21l-8-9h16l-8 9z"/>
+                                        </svg>
+                                        ${pub.citations} citations
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </a>
+                </article>
+            `;
+        }).join('');
 
         // Set up scroll functionality
         setupScroll(pubContainer, leftBtn, rightBtn);
@@ -241,3 +248,226 @@ function setupScroll(container, leftBtn, rightBtn) {
         console.error('Failed to preload category names', e);
     }
 })();
+
+// Add CSS for publication card links and citation positioning
+document.addEventListener('DOMContentLoaded', () => {
+  const style = document.createElement('style');
+  style.textContent = `
+    /* Make entire card clickable */
+    .pub-card {
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .pub-card-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      height: 100%;
+    }
+    
+    /* Make card content a flex container for positioning */
+    .pub-card-content {
+      display: flex;
+      flex-direction: column;
+      height: 180px;
+      position: relative;
+    }
+    
+    /* Position metrics at the bottom */
+    .pub-metrics {
+      position: absolute;
+      bottom: 15px;
+      left: 0;
+      margin: 0;
+    }
+    
+    /* Style citation metric */
+    .metric.citations {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--color-text-light);
+      font-size: 0.9rem;
+    }
+    
+    /* Ensure title doesn't overlap with citations */
+    .pub-card h3 {
+      margin-bottom: 40px;
+    }
+  `;
+  document.head.appendChild(style);
+});
+
+// Add CSS for larger publication cards with fixed citation position
+document.addEventListener('DOMContentLoaded', () => {
+  const style = document.createElement('style');
+  style.textContent = `
+    /* Make entire card clickable and larger */
+    .pub-card {
+      position: relative;
+      cursor: pointer;
+      min-width: 350px;  /* Increased from original size */
+      max-width: 350px;  /* Increased from original size */
+      height: 530px;     /* Increased from original size */
+      margin: 1rem;
+    }
+    
+    /* Adjust image container for larger card */
+    .pub-card-image {
+      height: 220px;     /* Increase image height */
+    }
+    
+    .pub-card-image img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+    
+    .pub-card-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      height: 100%;
+    }
+    
+    /* Make card content larger and a flex container for positioning */
+    .pub-card-content {
+      display: flex;
+      flex-direction: column;
+      height: 230px;     /* Increased content area height */
+      position: relative;
+      padding: 1.5rem;   /* Increased padding */
+    }
+    
+    /* Position metrics at the bottom */
+    .pub-metrics {
+      position: absolute;
+      bottom: 0px;
+      left: 20px;
+      margin: 0;
+    }
+    
+    /* Style citation metric */
+    .metric.citations {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--color-text-light);
+      font-size: 1rem;   /* Slightly larger font */
+    }
+    
+    /* Ensure title doesn't overlap with citations and increase size */
+    .pub-card h3 {
+      margin-bottom: 30px;
+      font-size: 1.2rem;  /* Larger title */
+      line-height: 1.4;
+    }
+    
+    /* Ensure card badges are appropriately sized */
+    .pub-card-badge {
+      font-size: 0.9rem;
+      padding: 0.4rem 0.8rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Adjust scrolling for the larger cards */
+    .pub-featured-wrapper {
+      padding: 1.5rem 0;
+    }
+  `;
+  document.head.appendChild(style);
+});
+
+// Add CSS for larger publication cards with fixed citation position at absolute bottom
+document.addEventListener('DOMContentLoaded', () => {
+  const style = document.createElement('style');
+  style.textContent = `
+    /* Make entire card clickable and larger */
+    .pub-card {
+      position: relative;
+      cursor: pointer;
+      min-width: 350px;
+      max-width: 350px;
+      height: 550px;
+      margin: 0rem;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .pub-card-link {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      height: 100%;
+    }
+    
+    /* Adjust image container for larger card */
+    .pub-card-image {
+      height: 220px;
+      flex-shrink: 0;
+    }
+    
+    .pub-card-image img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+    
+    /* Make card content area flexible */
+    .pub-card-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding: 1.5rem;
+    }
+    
+    /* Ensure title has appropriate space */
+    .pub-card h3 {
+      font-size: 1.2rem;
+      line-height: 1.4;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    /* Position metrics at the very bottom of the card */
+    .pub-metrics {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Style citation metric */
+    .metric.citations {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--color-text-light);
+      font-size: 1rem;
+    }
+    
+    /* Create bottom space to ensure text doesn't overlap with citations */
+    .pub-card-content::after {
+      content: '';
+      display: block;
+      height: 50px; /* Space for citations */
+    }
+    
+    /* Ensure card badges are appropriately sized */
+    .pub-card-badge {
+      font-size: 0.9rem;
+      padding: 0.4rem 0.8rem;
+      margin-right: 0.3rem;
+      margin-bottom: 0.3rem;
+      display: inline-block;
+    }
+  `;
+  document.head.appendChild(style);
+});
