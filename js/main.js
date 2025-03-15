@@ -24,6 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Initialize the infinite scroll gallery with proper setup
   initializeGallery();
+  
+  // Initialize collaborator scrolling buttons
+  initializeCollaboratorScrolling();
 });
 
 /**
@@ -480,6 +483,36 @@ function initializeGallery() {
     scrollWrapper.style.animation = 'none';
     scrollWrapper.offsetHeight; // Force reflow
     scrollWrapper.style.animation = 'scrollLeft 90s linear infinite';
+  });
+}
+
+/**
+ * Initialize the collaborator section scroll buttons
+ */
+function initializeCollaboratorScrolling() {
+  const collabContainer = document.querySelector('.collab-container');
+  const prevBtn = document.querySelector('.collaborators .scroll-btn.prev');
+  const nextBtn = document.querySelector('.collaborators .scroll-btn.next');
+  
+  if (!collabContainer || !prevBtn || !nextBtn) return;
+  
+  // The amount to scroll with each button click
+  const scrollAmount = 300;
+  
+  // Add event listener for the previous button
+  prevBtn.addEventListener('click', () => {
+    collabContainer.scrollBy({
+      left: -scrollAmount,
+      behavior: 'smooth'
+    });
+  });
+  
+  // Add event listener for the next button
+  nextBtn.addEventListener('click', () => {
+    collabContainer.scrollBy({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
   });
 }
 
