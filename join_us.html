@@ -8,6 +8,7 @@
   <link rel="icon" type="image/png" href="images/web_logo.png">
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/joinus.css" />
+  <link rel="stylesheet" href="css/contact.css" />
   <script src="js/components.js" defer></script>
   <script src="js/main.js" defer></script>
 </head>
@@ -69,6 +70,45 @@
       </div>
     </section>
   </main>
+  <section class="contact-section">
+    <div class="contact-container">
+      <section class="contact-form-section">
+        <h1 class="typing-title">Send us a message</h1>
+        <form class="contact-form" id="contact-form">
+          <div class="form-group">
+            <input type="text" id="name" placeholder=" " required>
+            <label for="name">Your Name</label>
+            <span class="focus-border"></span>
+          </div>
+          
+          <div class="form-group">
+            <input type="email" id="email" placeholder=" " required>
+            <label for="email">Your Email</label>
+            <span class="focus-border"></span>
+          </div>
+          
+          <div class="form-group">
+            <textarea id="message" placeholder=" " required></textarea>
+            <label for="message">Your Message</label>
+            <span class="focus-border"></span>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            Send 
+            <span class="btn-hover"></span>
+          </button>
+        </form>
+      </section>
+
+      <section class="map-section">
+        <div class="map-container">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.29052440226!2d-73.95881038718849!3d40.75563443482199!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259ba857dd7a7%3A0xa9377b1a9772ce08!2sCornell%20Tech!5e0!3m2!1sen!2sus!4v1736203182370!5m2!1sen!2sus"
+            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+      </section>
+    </div>
+  </section>
 
   <div id="footer-placeholder"></div>
 </body>
