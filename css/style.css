@@ -627,7 +627,7 @@ img {
 .small-card-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* This ensures the image covers the area while maintaining aspect ratio */
+  object-fit: contain; /* This ensures the image covers the area while maintaining aspect ratio */
   transition: transform 0.3s ease;
 }
 
@@ -741,8 +741,8 @@ img {
 .infinite-scroll .small-card {
   flex: 0 0 auto;
   width: auto;
-  min-width: 10px;
-  max-width: 800px; /* Limit max width for consistency */
+  min-width: 100px;
+  max-width: 400px; /* Limit max width for consistency */
   margin-right: 16px;
   display: flex;
   flex-direction: column;
@@ -1385,12 +1385,6 @@ img {
 
 
 @media (max-width: 480px) {
-
-  .small-card-image,
-  .infinite-scroll .small-card-image {
-    height: 700px;
-  }
-
   :root {
     --font-size-xxl: 1.8rem;
     --font-size-xl: 1.3rem;
