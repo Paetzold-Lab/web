@@ -1385,6 +1385,12 @@ img {
 
 
 @media (max-width: 480px) {
+
+  .small-card-image,
+  .infinite-scroll .small-card-image {
+    height: 400px;
+  }
+
   :root {
     --font-size-xxl: 1.8rem;
     --font-size-xl: 1.3rem;
