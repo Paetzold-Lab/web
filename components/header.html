@@ -1,47 +1,37 @@
-<!-- ========== HEADER (Top Nav) ========== -->
 <header class="header">
-    <div class="header-inner">
-      <!-- Logo on the left -->
-      <div class="logo">Paetzold Lab</div>
-      <!-- Navigation items -->
-      <nav class="top-nav">
-        <ul>
-          <li><a href="index.html" id="nav-home">Home</a></li>
-          <li><a href="research.html" id="nav-research">Research</a></li>
-          <li><a href="team.html" id="nav-team">Team</a></li>
-          <li><a href="join_us.html" id="nav-join">Join Us</a></li>
-          <!-- <li><a href="contact.html" id="nav-contact">Contact</a></li> -->
-        </ul>
-      </nav>
-      <div class="nav-right">
-        <button class="search-btn">🔍</button>
-      </div>
+  <div class="header-inner">
+    <div class="logo">Paetzold Lab</div>
+
+    <nav class="top-nav">
+      <ul>
+        <li><a id="nav-home"    href="index.html">Home</a></li>
+        <li><a id="nav-research" href="research.html">Research</a></li>
+        <li><a id="nav-team"    href="team.html">Team</a></li>
+        <li><a id="nav-join"    href="join_us.html">Join Us</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-right">
+      <button class="search-btn" aria-label="Open search">🔍</button>
     </div>
-    <div class="progress-container">
-      <div class="progress-bar" id="progress-bar"></div>
-    </div>
-  </header>
-  
-  <script>
-    // Highlight current page in navigation
-    document.addEventListener('DOMContentLoaded', () => {
-      const currentPath = window.location.pathname;
-      const filename = currentPath.split('/').pop() || 'index.html';
-      
-      // Map of pages to nav IDs
-      const pageMap = {
-        'index.html': 'nav-home',
-        'research.html': 'nav-research',
-        'team.html': 'nav-team',
-        'Join_us.html': 'nav-join',
-        'contact.html': 'nav-contact',
-        'pi.html': 'nav-team' // PI page is part of team
-      };
-      
-      // Add active class to current page link
-      const navId = pageMap[filename];
-      if (navId) {
-        document.getElementById(navId)?.classList.add('active');
-      }
-    });
-  </script>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const file = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  const map  = {
+    'index.html'   : 'nav-home',
+    'research.html': 'nav-research',
+    'team.html'    : 'nav-team',
+    'join_us.html' : 'nav-join',
+    'contact.html' : 'nav-contact',
+    'pi.html'      : 'nav-team'
+  };
+  document.getElementById(map[file])?.classList.add('active');
+});
+</script>

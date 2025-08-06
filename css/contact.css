@@ -1,8 +1,3 @@
-/*
- * Paetzold Lab - Contact Page Styles
- */
-
-/* ========== CONTACT SECTION LAYOUT ========== */
 .contact-section {
   background: linear-gradient(to bottom, #fff, #f8f8f8);
   padding: 6rem 0;
@@ -42,23 +37,20 @@
   background: #fff;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-  /* No fixed height so the content can grow */
 }
 
 .contact-form-section {
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Allow scrolling if content overflows */
+  overflow-y: auto;
 }
 
-/* ========== CONTACT FORM STYLES ========== */
-/* Typing animation for the title */
 .typing-title {
   margin: 0;
   font-family: monospace;
   font-size: 2.5rem;
-  font-weight: bold; /* Make it bold */
+  font-weight: bold;
   margin-bottom: 2rem;
   white-space: pre;
   overflow: hidden;
@@ -67,64 +59,56 @@
   height: 1.2em;
   opacity: 0;
 }
+
 .typing-title.animate {
   opacity: 1;
-  animation:
-    typing 2s steps(17),
-    blink-caret 0.75s step-end infinite;
+  animation: typing 2s steps(17), blink-caret 0.75s step-end infinite;
 }
 
 .contact-form {
   width: 100%;
 }
 
-/* Each form group: label + input/textarea + bottom line */
 .form-group {
   position: relative;
   margin-bottom: 2rem;
 }
 
-/* Remove default borders, rely on .focus-border for the line */
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 0.8rem 0;  /* Top/bottom padding only, so label sits neatly */
+  padding: 0.8rem 0;
   font-size: 1rem;
   border: none;
   background: transparent;
-  /* So the built-in validation doesn't show a red outline */
   outline: none;
-  /* We won't have a bottom border here to avoid double lines */
-  /* Ensure placeholders exist in HTML so :placeholder-shown works */
 }
 
-/* The faint line under each field, turning black on focus */
 .focus-border {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 2px;
-  background: #eee;  /* faint line by default */
+  background: #eee;
   transition: background 0.3s ease;
 }
+
 .form-group input:focus ~ .focus-border,
 .form-group textarea:focus ~ .focus-border {
-  background: #000;  /* turn black on focus */
+  background: #000;
 }
 
-/* Floating label starts inside the field */
 .form-group label {
   position: absolute;
   left: 0;
-  top: 0.8rem;  
+  top: 0.8rem;
   color: #999;
   font-size: 1rem;
   transition: 0.3s ease;
   pointer-events: none;
 }
 
-/* Slide label up if field is focused OR has content (not placeholder-shown) */
 .form-group input:focus ~ label,
 .form-group input:not(:placeholder-shown) ~ label,
 .form-group textarea:focus ~ label,
@@ -134,13 +118,11 @@
   color: #000;
 }
 
-/* Textarea specifics */
 .form-group textarea {
   min-height: 120px;
   resize: vertical;
 }
 
-/* Submit button */
 .submit-btn {
   position: relative;
   padding: 0.8rem 2rem;
@@ -153,11 +135,11 @@
   overflow: hidden;
   transition: transform 0.3s ease;
 }
+
 .submit-btn:hover {
   transform: translateY(-2px);
 }
 
-/* Hover overlay for button */
 .btn-hover {
   position: absolute;
   top: 0;
@@ -168,11 +150,21 @@
   transform: translateX(-100%);
   transition: transform 0.3s ease;
 }
+
 .submit-btn:hover .btn-hover {
   transform: translateX(0);
 }
 
-/* ========== MAP SECTION ========== */
+.submit-btn.success {
+  background-color: #4CAF50 !important;
+  color: white !important;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn.success:hover {
+  background-color: #45a049 !important;
+}
+
 .map-section {
   width: 100%;
   min-height: 400px;
@@ -192,21 +184,6 @@
   border: 0;
 }
 
-/* Submit button success state */
-.submit-btn.success {
-  background-color: #4CAF50 !important; /* Green background */
-  color: white !important;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s ease;
-}
-
-/* Keep the hover effect working with success state */
-.submit-btn.success:hover {
-  background-color: #45a049 !important;
-}
-
-/* ========== KEYFRAMES ========== */
 @keyframes typing {
   from { width: 0; }
   to { width: 17ch; }
@@ -217,67 +194,21 @@
   50% { border-color: black; }
 }
 
-/* ========== RESPONSIVE STYLES ========== */
 @media (max-width: 1000px) and (min-width: 568px) {
-  .contact-section {
-    padding: 3rem 0;
-  }
-  
-  .typing-title {
-    font-size: 2.5rem !important;
-    width: calc(17ch + 8px);
-    height: 1.2em;
-  }
-
-  .contact-container {
-    grid-template-columns: 1fr;
-    min-height: auto;
-    gap: 2rem;
-  }
-
-  .contact-form-section {
-    padding: 1.5rem;
-  }
-  
-  .map-section {
-    height: 300px;
-  }
+  .contact-section { padding: 3rem 0; }
+  .typing-title { font-size: 2.5rem !important; }
+  .contact-container { grid-template-columns: 1fr; min-height: auto; gap: 2rem; }
+  .contact-form-section { padding: 1.5rem; }
+  .map-section { height: 300px; }
 }
 
 @media (max-width: 568px) {
-  .contact-section {
-    padding: 3rem 0;
-  }
-  
-  .typing-title {
-    font-size: 1.5rem !important;
-    width: calc(17ch + 4px);
-    height: 1.2em;
-  }
-
-  .contact-container {
-    grid-template-columns: 1fr;
-    min-height: auto;
-    gap: 1.5rem;
-    padding: 0 1rem;
-  }
-
-  .contact-form-section {
-    padding: 1.5rem;
-    min-height: 400px;
-  }
-  
-  .map-section {
-    height: 200px;
-  }
-  
-  .form-group {
-    margin-bottom: 1.5rem;
-  }
-  
-  .submit-btn {
-    width: 100%;
-  }
-
-  
+  .contact-section { padding: 3rem 0; }
+  .typing-title { font-size: 1.5rem !important; width: calc(17ch + 4px); }
+  .contact-container { grid-template-columns: 1fr; min-height: auto; gap: 1.5rem; padding: 0 1rem; }
+  .contact-form-section { padding: 1.5rem; min-height: 400px; }
+  .map-section { height: 200px; }
+  .form-group { margin-bottom: 1.5rem; }
+  .submit-btn { width: 100%; }
 }
+

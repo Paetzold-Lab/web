@@ -1,4 +1,3 @@
-<!-- ========== FOOTER with LEGAL NOTICE ========== -->
 <footer class="footer">
   <div class="footer-logos">
     <a href="https://weill.cornell.edu/">
@@ -9,241 +8,65 @@
       <img src="images/logo/Twisted-T-Lockup-Cornell-Red.png" alt="Cornell Tech Logo" class="footer-logo">
     </a>
   </div>
+
   <div class="footer-text">
-    <p>&copy; <span id="current-year"></span> Paetzold Lab. All rights reserved. <a href="javascript:void(0);" id="open-legal-notice" class="legal-link">Legal Notice</a></p>
+    <p>&copy; <span id="current-year"></span> Paetzold Lab. All rights reserved.
+       <a href="#" id="open-legal-notice" class="legal-link">Legal Notice</a>
+    </p>
   </div>
-  
-  <!-- Legal Notice Popup -->
+
   <div id="legal-notice-popup" class="legal-popup">
     <div class="legal-popup-backdrop"></div>
-    <div class="legal-popup-content">
-      <button class="legal-popup-close">&times;</button>
+    <div class="legal-popup-content" role="dialog" aria-modal="true">
+      <button class="legal-popup-close" aria-label="Close">&times;</button>
+
       <h2>Legal Notice</h2>
-      
+
       <div class="legal-section">
         <h3>Paetzold Lab</h3>
-        <p>Department of Radiology</p>
-        <p>Weill Cornell Medicine</p>
-        <p>Cornell Tech Campus</p>
-        <p>New York, NY 10044</p>
+        <p>Department of Radiology, Weill Cornell Medicine</p>
+        <p>Cornell Tech Campus, New York&nbsp;NY&nbsp;10044</p>
         <p>Email: <a href="mailto:jpaetzold@cornell.edu">jpaetzold@cornell.edu</a></p>
       </div>
-      
+
       <div class="legal-section">
         <h3>Responsible for Content</h3>
-        <p>Dr. Johannes C. Paetzold</p>
-        <p>Paetzold Lab, Weill Cornell Medicine</p>
+        <p>Dr.&nbsp;Johannes&nbsp;C.&nbsp;Paetzold</p>
       </div>
-      
-      <div class="legal-section">
-        <h3>Affiliation</h3>
-        <p>This website is maintained by <strong>Paetzold Lab</strong> at <strong>Weill Cornell Medicine</strong>. The content presented reflects the views of the authors and does not necessarily represent the opinions of <strong>Weill Cornell Medicine</strong> or <strong>Cornell University</strong>.</p>
-      </div>
-      
-      <div class="legal-section">
-        <h3>Disclaimer</h3>
-        <p>The information on this website is provided for research and educational purposes only. While we strive for accuracy, we do not guarantee the completeness or correctness of the information. External links provided are for informational purposes only; we are not responsible for the content of third-party websites.</p>
-      </div>
-      
+
       <div class="legal-section">
         <h3>Privacy Policy</h3>
-        <p>This website does not collect personal data unless explicitly stated. Any data collected (e.g., contact forms, analytics) will be handled according to <strong>Weill Cornell Medicine's Privacy Policy</strong> <a href="https://weill.cornell.edu/privacy-policy" target="_blank">(link)</a>.</p>
+        <p>See <a href="https://weill.cornell.edu/privacy-policy" target="_blank" rel="noopener">Weill&nbsp;Cornell&nbsp;Medicine&nbsp;Privacy&nbsp;Policy</a>.</p>
       </div>
-      
+
       <div class="legal-section">
-        <h3>Copyright Notice</h3>
-        <p>All content, unless otherwise stated, is © <span class="year-span"></span> Paetzold Lab, Weill Cornell Medicine. Reproduction or distribution of materials requires prior permission.</p>
+        <h3>Copyright</h3>
+        <p>&copy; <span class="year-span"></span> Paetzold Lab, Weill Cornell Medicine.</p>
       </div>
     </div>
   </div>
 </footer>
 
 <style>
-/* Legal notice link in footer */
-.legal-link {
-  color: #666;
-  text-decoration: none;
-  transition: color 0.2s;
-  cursor: pointer;
-}
-
-.legal-link:hover {
-  color: #000;
-  text-decoration: underline;
-}
-
-/* Legal notice popup */
-.legal-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9999;
-  display: none;
-}
-
-.legal-popup.active {
-  display: block;
-}
-
-.legal-popup-backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-}
-
-.legal-popup-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 800px;
-  max-height: 90vh;
-  background: white;
-  border-radius: 10px;
-  padding: 30px;
-  overflow-y: auto;
-  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
-}
-
-.legal-popup-close {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 28px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #666;
-  transition: color 0.2s;
-}
-
-.legal-popup-close:hover {
-  color: #000;
-}
-
-.legal-popup h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
-}
-
-.legal-section {
-  margin-bottom: 20px;
-}
-
-.legal-section h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.legal-section p {
-  margin-bottom: 8px;
-  line-height: 1.6;
-  color: #333;
-}
-
-.legal-section a {
-  color: #0072ff;
-  text-decoration: none;
-}
-
-.legal-section a:hover {
-  text-decoration: underline;
-}
-
-.footer-text {
-  text-align: center;
-  margin-top: 10px;
-}
-
-@media (max-width: 768px) {
-  .legal-popup-content {
-    padding: 20px;
-  }
-  
-  .legal-popup h2 {
-    font-size: 20px;
-  }
-  
-  .legal-section h3 {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .legal-popup-content {
-    padding: 15px;
-  }
-  
-  .legal-popup h2 {
-    font-size: 18px;
-    margin-bottom: 15px;
-  }
-  
-  .legal-section {
-    margin-bottom: 15px;
-  }
-}
+.legal-link{color:#666;text-decoration:none;transition:color .2s;cursor:pointer}
+.legal-link:hover{color:#000;text-decoration:underline}
+.legal-popup{position:fixed;inset:0;z-index:9999;display:none}
+.legal-popup.active{display:block}
+.legal-popup-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(5px)}
+.legal-popup-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:800px;max-height:90vh;background:#fff;border-radius:10px;padding:30px;overflow-y:auto;box-shadow:0 5px 30px rgba(0,0,0,.3)}
+.legal-popup-close{position:absolute;top:15px;right:20px;font-size:28px;background:none;border:none;cursor:pointer;color:#666;transition:color .2s}
+.legal-popup-close:hover{color:#000}
+.legal-popup h2{font-size:24px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #eee}
+.legal-section{margin-bottom:20px}
+.legal-section h3{font-size:18px;margin-bottom:10px}
+.legal-section p{margin-bottom:8px;line-height:1.6;color:#333}
+.legal-section a{color:#0072ff;text-decoration:none}
+.legal-section a:hover{text-decoration:underline}
+.footer-text{text-align:center;margin-top:10px}
+@media(max-width:768px){.legal-popup-content{padding:20px}.legal-popup h2{font-size:20px}.legal-section h3{font-size:16px}}
+@media(max-width:480px){.legal-popup-content{padding:15px}.legal-popup h2{font-size:18px;margin-bottom:15px}.legal-section{margin-bottom:15px}}
 </style>
 
 <script>
-  (function() {
-    // Set current year
-    const currentYear = new Date().getFullYear();
-    const yearEl = document.getElementById('current-year');
-    if (yearEl) yearEl.textContent = currentYear;
-    
-    document.querySelectorAll('.year-span').forEach(span => {
-      span.textContent = currentYear;
-    });
-    
-    // Legal notice popup functionality
-    const openLegalNotice = document.getElementById('open-legal-notice');
-    const legalPopup = document.getElementById('legal-notice-popup');
-    const closeButton = document.querySelector('.legal-popup-close');
-    const backdrop = document.querySelector('.legal-popup-backdrop');
-    
-    if (openLegalNotice && legalPopup) {
-      // Open popup when clicking the link
-      openLegalNotice.addEventListener('click', function(e) {
-        e.preventDefault();
-        legalPopup.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling
-        console.log('Legal notice popup activated'); // Debug message
-      });
-      
-      // Close popup when clicking X button
-      if (closeButton) {
-        closeButton.addEventListener('click', function() {
-          legalPopup.classList.remove('active');
-          document.body.style.overflow = ''; // Re-enable scrolling
-        });
-      }
-      
-      // Close popup when clicking backdrop
-      if (backdrop) {
-        backdrop.addEventListener('click', function() {
-          legalPopup.classList.remove('active');
-          document.body.style.overflow = ''; // Re-enable scrolling
-        });
-      }
-      
-      // Close popup when pressing ESC key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && legalPopup.classList.contains('active')) {
-          legalPopup.classList.remove('active');
-          document.body.style.overflow = ''; // Re-enable scrolling
-        }
-      });
-    }
-  })();
+(()=>{const y=new Date().getFullYear();document.getElementById('current-year').textContent=y;document.querySelectorAll('.year-span').forEach(e=>e.textContent=y);const open=document.getElementById('open-legal-notice'),popup=document.getElementById('legal-notice-popup'),closeBtn=popup.querySelector('.legal-popup-close'),backdrop=popup.querySelector('.legal-popup-backdrop'),show=()=>{popup.classList.add('active');document.body.style.overflow='hidden'},hide=()=>{popup.classList.remove('active');document.body.style.overflow=''};open.addEventListener('click',e=>{e.preventDefault();show()});closeBtn.addEventListener('click',hide);backdrop.addEventListener('click',hide);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&popup.classList.contains('active'))hide()})})();
 </script>
