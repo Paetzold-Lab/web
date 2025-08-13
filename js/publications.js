@@ -178,9 +178,18 @@ function sortPublications(arr) {
   });
 }
 
+function prettyCat(id) {
+  if (categories[id]) return categories[id];
+  if (/^[a-z]{2,4}$/.test(id)) return id.toUpperCase(); // e.g., mri -> MRI, ct -> CT
+  return id
+    .split(/[-_]/)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
 function badges(cats) {
   if (!cats?.length) return '<span class="pub-category-badge other">Research</span>';
-  return cats.map(c => `<span class="pub-category-badge ${c}">${categories[c] || c}</span>`).join("");
+  return cats.map(c => `<span class="pub-category-badge ${c}">${prettyCat(c)}</span>`).join("");
 }
 
 function renderPublication(p) {

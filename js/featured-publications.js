@@ -1,11 +1,26 @@
+// Local fallback / legacy names. Prefer dynamic names from publications.json when available.
 const CATEGORY_NAMES = {
   "medical-imaging": "Medical Imaging",
   gnn: "GNN",
   generative: "Generative AI",
   topology: "Topology",
   microscopy: "Microscopy",
+  mri: "MRI",
+  ct: "CT",
+  pet: "PET",
+  "x-ray": "X-ray",
+  ultrasound: "Ultrasound",
+  histology: "Histology",
+  segmentation: "Segmentation",
+  reconstruction: "Reconstruction",
+  detection: "Detection",
+  registration: "Registration",
+  classification: "Classification",
   other: "Research"
 };
+
+// Will be populated from publications.json (data.categories) for single source of truth.
+let CATEGORY_MAP_FROM_DATA = {};
 
 async function json(path) {
   const r = await fetch(path);
@@ -15,42 +30,72 @@ async function json(path) {
 
 async function getFeaturedPublications() {
   const data = await json("./data/publications.json");
+  if (data.categories) CATEGORY_MAP_FROM_DATA = data.categories;
   const pubs = data.publications;
-
+  // 1. Explicit featured entries (preferred)
   const featured = pubs
     .filter(p => p.featured)
     .sort((a, b) => (a.featuredOrder ?? 999) - (b.featuredOrder ?? 999));
   if (featured.length) return featured;
 
+  // 2. Legacy manual id list (kept for backward compatibility if old ids still exist)
   const manualIds = ["pub001", "pub028", "pub013", "pub055", "pub088", "pub006"];
   const manual = pubs
     .filter(p => manualIds.includes(p.id))
     .sort((a, b) => manualIds.indexOf(a.id) - manualIds.indexOf(b.id));
   if (manual.length) return manual;
 
+  // 3. Category-based diverse selection (derive categories if top-level summary missing)
+  let categoryMap = data.categories;
+  if (!categoryMap) {
+    categoryMap = {};
+    pubs.forEach(p => (p.categories || []).forEach(c => (categoryMap[c] = c)));
+  }
   const auto = [];
-  Object.keys(data.categories || {}).forEach(cat => {
+  Object.keys(categoryMap).forEach(cat => {
     auto.push(
       ...pubs
         .filter(p => p.categories?.includes(cat))
         .sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0))
-        .slice(0, 2)
+        .slice(0, 1) // take top 1 per category first for diversity
     );
   });
+  // Fill remaining slots (up to 6) with next best across categories
+  if (auto.length < 6) {
+    const remaining = pubs
+      .filter(p => !auto.find(a => a.id === p.id))
+      .sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0));
+    auto.push(...remaining.slice(0, 6 - auto.length));
+  }
+  if (auto.length) {
+    return auto
+      .filter((v, i, arr) => arr.findIndex(x => x.id === v.id) === i)
+      .slice(0, 6);
+  }
 
-  const uniq = [];
-  const seen = new Set();
-  auto.forEach(p => {
-    if (!seen.has(p.id)) {
-      seen.add(p.id);
-      uniq.push(p);
-    }
+  // 4. Absolute fallback: pick top 6 by citations or by year if citations absent
+  const scored = [...pubs].sort((a, b) => {
+    const ca = a.citations ?? 0;
+    const cb = b.citations ?? 0;
+    if (cb !== ca) return cb - ca;
+    const ya = a.year ?? 0;
+    const yb = b.year ?? 0;
+    return yb - ya;
   });
-  return uniq.sort((a, b) => (b.citations ?? 0) - (a.citations ?? 0)).slice(0, 6);
+  return scored.slice(0, 6);
 }
 
 function catName(id) {
-  return CATEGORY_NAMES[id] || id;
+  // Prefer names from data, then static map, then heuristic capitalization.
+  if (CATEGORY_MAP_FROM_DATA[id]) return CATEGORY_MAP_FROM_DATA[id];
+  if (CATEGORY_NAMES[id]) return CATEGORY_NAMES[id];
+  // Heuristic: if short (<=4) and all lowercase letters, uppercase it (e.g., mri -> MRI)
+  if (/^[a-z]{2,4}$/.test(id)) return id.toUpperCase();
+  // Replace hyphen groups with capitalized words.
+  return id
+    .split(/[-_]/)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 }
 
 function scrollSetup(c, l, r) {
