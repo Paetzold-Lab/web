@@ -4,10 +4,10 @@
 
     <nav class="top-nav">
       <ul>
-        <li><a id="nav-home"    href="/index.html">Home</a></li>
-        <li><a id="nav-research" href="/research.html">Research</a></li>
-        <li><a id="nav-team"    href="/team.html">Team</a></li>
-        <li><a id="nav-join"    href="/join_us.html">Join Us</a></li>
+        <li><a id="nav-home"    href="index.html">Home</a></li>
+        <li><a id="nav-research" href="research.html">Research</a></li>
+        <li><a id="nav-team"    href="team.html">Team</a></li>
+        <li><a id="nav-join"    href="join_us.html">Join Us</a></li>
       </ul>
     </nav>
 
@@ -41,23 +41,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Adjust links for GitHub Pages deployment ---
   const isGitHubPages = window.location.hostname.includes('github.io');
   
-  if (isGitHubPages) {
-    // Extract the repository name from the pathname, e.g., "/web/"
-    const repoName = window.location.pathname.split('/')[1];
-    const basePath = `/web/${repoName}/`;
+  // Check if we're in a subdirectory by looking at the current path
+  const currentPath = window.location.pathname;
+  const isInSubdirectory = currentPath.includes('/team_members_subpage/');
 
-    // Determine if the current page is in a subdirectory
-    const pathSegments = window.location.pathname.split('/').filter(Boolean);
-    const isSubpage = pathSegments.length > 2; // e.g., /web/team_members_subpage/file.html
-
-    document.querySelectorAll('.top-nav a').forEach(link => {
-      const originalHref = link.getAttribute('href');
-      if (originalHref && !originalHref.startsWith('http')) {
-        // For subpages, we need to navigate up to the repository root
-        const newHref = isSubpage ? `..${basePath}${originalHref}` : `${basePath}${originalHref}`;
-        link.setAttribute('href', newHref.replace('//', '/')); // Clean up double slashes
+  document.querySelectorAll('.top-nav a').forEach(link => {
+    const originalHref = link.getAttribute('href');
+    if (originalHref && !originalHref.startsWith('http') && !originalHref.startsWith('/')) {
+      if (isInSubdirectory) {
+        // If we're in a subdirectory, go back to the parent directory
+        link.setAttribute('href', `../${originalHref}`);
       }
-    });
-  }
+      // If we're at the root level, the relative paths work as-is
+    }
+  });
 });
 </script>
