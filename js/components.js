@@ -13,7 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadComponent(name, target) {
-  fetch(`components/${name}.html`)
+  const isSubpage = window.location.pathname.includes('/team_members_subpage/');
+  const basePath = isSubpage ? '../' : './';
+
+  fetch(`${basePath}components/${name}.html`)
     .then(r => {
       if (!r.ok) throw new Error(r.status);
       return r.text();
