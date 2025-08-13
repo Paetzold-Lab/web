@@ -22,38 +22,40 @@
 </header>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // --- Set active nav link ---
-  const file = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-  const map  = {
-    'index.html'   : 'nav-home',
-    'research.html': 'nav-research',
-    'team.html'    : 'nav-team',
-    'join_us.html' : 'nav-join',
-    'contact.html' : 'nav-contact',
-    'pi.html'      : 'nav-team'
-  };
-  const activeLink = document.getElementById(map[file]);
-  if (activeLink) {
-    activeLink.classList.add('active');
-  }
+// Ensure header initialization runs even when this fragment is injected after DOMContentLoaded
+(function initHeader(){
+  function run(){
+    // --- Set active nav link ---
+    const file = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    const map  = {
+      'index.html'   : 'nav-home',
+      'research.html': 'nav-research',
+      'team.html'    : 'nav-team',
+      'join_us.html' : 'nav-join',
+      'contact.html' : 'nav-contact',
+      'pi.html'      : 'nav-team'
+    };
+    const activeLink = document.getElementById(map[file]);
+    if (activeLink) activeLink.classList.add('active');
 
-  // --- Adjust links for GitHub Pages deployment ---
-  const isGitHubPages = window.location.hostname.includes('github.io');
-  
-  // Check if we're in a subdirectory by looking at the current path
-  const currentPath = window.location.pathname;
-  const isInSubdirectory = currentPath.includes('/team_members_subpage/');
-
-  document.querySelectorAll('.top-nav a').forEach(link => {
-    const originalHref = link.getAttribute('href');
-    if (originalHref && !originalHref.startsWith('http') && !originalHref.startsWith('/')) {
-      if (isInSubdirectory) {
-        // If we're in a subdirectory, go back to the parent directory
-        link.setAttribute('href', `../${originalHref}`);
-      }
-      // If we're at the root level, the relative paths work as-is
+    // --- Adjust links when inside team member subpage directory ---
+    const isInSubdirectory = window.location.pathname.includes('/team_members_subpage/');
+    if (isInSubdirectory) {
+      document.querySelectorAll('.top-nav a').forEach(link => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+        // Only modify relative (non-absolute + non-protocol) links
+        if (href.startsWith('http') || href.startsWith('/') ) return;
+        // Avoid double prefixing
+        if (href.startsWith('../')) return;
+        link.setAttribute('href', `../${href}`);
+      });
     }
-  });
-});
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run, { once: true });
+  } else {
+    run();
+  }
+})();
 </script>
