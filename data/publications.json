@@ -69,7 +69,7 @@
       "venue_tag": null,
       "doi": null,
       "abstract": "",
-      "url": "https://openaccess.thecvf.com/content/CVPR2021/papers/Shit_clDice_-_A_Novel_Topology-Pr[…]ng_Loss_Function_for_Tubular_Structure_CVPR_2021_paper.pdf",
+      "url": "https://openaccess.thecvf.com/content/CVPR2021/papers/Shit_clDice_-_A_Novel_Topology-Preserving_Loss_Function_for_Tubular_Structure_CVPR_2021_paper.pdf",
       "scholar_link": "/scholar?hl=en&cites=17149814151594930474,11561599168494704613,13174810049061567829,16632085098506993449,10817242860175646475",
       "citations": 329,
       "pdf_link": "",
@@ -463,29 +463,6 @@
       ],
       "primary_category": "mri",
       "thumbnail": "images/publications/default.png",
-      "featured": false,
-      "featuredOrder": 999
-    },
-    {
-      "id": "pub028",
-      "title": "clDice-a Novel Connectivity-Preserving Loss Function for Vessel Segmentation",
-      "authors": "Johannes C Paetzold* and Suprosanna Shit* and Ivan Ezhov and Giles Tetteh and Ali Ertürk and Bjoern Menze",
-      "year": 2019,
-      "venue": "CVPR",
-      "venue_tag": null,
-      "doi": null,
-      "abstract": "Accurate segmentation of vascular structures is an emerging research topic with relevance to clinical and biological research. The connectedness of the segmented vessels is often the most significant property for many applications such as disease modeling for neurodegeneration and stroke. We introduce a novel metric namely clDice, which is calculated on the intersection of centerlines and volumes as opposed to the traditional dice, which is calculated on volumes only. Firstly, we tested state-of-the-art vessel segmentation networks using the proposed metric as evaluation criteria and show that it captures vascular network properties superior to traditional metrics, such as the dice-coefficient. Secondly, we propose a differentiable form of clDice as a loss function for vessel segmentation. We find that training on clDice leads to segmentation with more accurate connectivity information, higher graph similarity and often superior volumetric scores.",
-      "url": "https://openaccess.thecvf.com/content/CVPR2021/papers/Shit_clDice_-_A_Novel_Topology-Preserving_Loss_Function_for_Tubular_Structure_CVPR_2021_paper.pdf",
-      "scholar_link": "/scholar?hl=en&cites=4005154896457950750,4831368935089680642",
-      "citations": 20,
-      "pdf_link": "",
-      "categories": [
-        "ct",
-        "topology",
-        "segmentation"
-      ],
-      "primary_category": "ct",
-      "thumbnail": "images/publications/manual_added/clDice.png",
       "featured": false,
       "featuredOrder": 999
     },
