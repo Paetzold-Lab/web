@@ -1,5 +1,33 @@
 const ITEMS_PER_PAGE = 5;
-const LAB_MEMBERS = ["Johannes Paetzold", "Chenjun Li", "Laurin Lux", "Alexander Berger", "Adina Scheinfeld", "Rudolf van Herten", "Lucas Stoffl"];
+const LAB_MEMBERS = [
+  "Johannes Paetzold",
+  "Chenjun Li",
+  "Laurin Lux",
+  "Alexander Berger",
+  "Adina Scheinfeld",
+  "Rudolf van Herten",
+  "Lucas Stoffl"
+];
+
+// Common abbreviated / variant forms appearing in publication metadata.
+const LAB_MEMBER_ALIASES = {
+  "Johannes Paetzold": ["J Paetzold", "J C Paetzold", "Johannes C Paetzold"],
+  "Chenjun Li": ["C Li", "C. Li"],
+  "Laurin Lux": ["L Lux"],
+  "Alexander Berger": ["A Berger", "A H Berger", "A. Berger", "A. H. Berger"],
+  "Adina Scheinfeld": ["A Scheinfeld"],
+  "Rudolf van Herten": ["R van Herten", "R. van Herten", "R v Herten"],
+  "Lucas Stoffl": ["L Stoffl"]
+};
+
+function normalizeAuthorName(str) {
+  return str.toLowerCase().replace(/\./g, "").replace(/\s+/g, " ").trim();
+}
+
+const LAB_ALIAS_SET = new Set([
+  ...LAB_MEMBERS.map(normalizeAuthorName),
+  ...Object.values(LAB_MEMBER_ALIASES).flat().map(normalizeAuthorName)
+]);
 
 let publications = [];
 let categories = {};
@@ -145,15 +173,40 @@ const ellipsis = (t, l) => (!t ? "" : t.length > l ? `${t.slice(0, l)}...` : t);
 
 function highlightAuthors(str) {
   const pairs = LAB_MEMBERS.map(n => {
-    const [f, l] = n.split(" ");
-    return { f: f.toLowerCase(), l: l.toLowerCase() };
+    const parts = n.split(/\s+/);
+    const first = parts[0];
+    // Handle compound last names like "van Herten"
+    const last = parts.slice(1).join(" ") || "";
+    return { f: first.toLowerCase(), fi: first[0].toLowerCase(), l: last.toLowerCase() };
   });
+
   return str
     .split(", ")
-    .map(n => {
-      const lo = n.trim().toLowerCase();
-      const isLab = pairs.some(p => lo.includes(p.f) && lo.includes(p.l));
-      return isLab ? `<span class="lab-member">${n.trim()}</span>` : n.trim();
+    .map(rawName => {
+      const display = rawName.trim();
+      const norm = normalizeAuthorName(display);
+
+      // Direct alias / full match
+      let isLab = LAB_ALIAS_SET.has(norm);
+
+      if (!isLab) {
+        // Try initial + last name heuristic
+        isLab = pairs.some(p => {
+          if (!p.l) return false;
+            // Match full first + last
+          if (norm.includes(p.f) && norm.includes(p.l)) return true;
+          // Match first initial + last (supports compound last names)
+          const lastEsc = p.l.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+          const re = new RegExp(`^${p.fi}\s+${lastEsc}$`); // e.g. c li
+          if (re.test(norm)) return true;
+          // With optional middle initial(s)
+          const reMid = new RegExp(`^${p.fi}(?:\s+[a-z]){0,2}\s+${lastEsc}$`); // a h berger
+          if (reMid.test(norm)) return true;
+          return false;
+        });
+      }
+
+      return isLab ? `<span class="lab-member">${display}</span>` : display;
     })
     .join(", ");
 }

@@ -2087,7 +2087,7 @@
       "venue_tag": null,
       "doi": null,
       "abstract": "In addition to our Theorem 1 in the main paper, we are providing intuitive interpretations of clDice from the digital topology perspective. Betti numbers describe and quantify topological differences in algebraic topology. The first three Betti numbers (β0, β1, and β2) comprehensively capture the manifolds appearing in 2D and 3D topological space. Specifically,• β0 represents the number of connected-components,• β1 represents the number of circular holes, and• β2 represents the number of cavities (Only in 3D)",
-      "url": "https://openaccess.thecvf.com/content/CVPR2021/supplemental/Shit_clDice_-_A_CVPR_2021_supplemental.pdf",
+      "url": " https://openaccess.thecvf.com/content/CVPR2021/papers/Shit_clDice_-_A_Novel_Topology-Preserving_Loss_Function_for_Tubular_Structure_CVPR_2021_paper.pdf",
       "scholar_link": "",
       "citations": 0,
       "pdf_link": "",
