@@ -1,11 +1,11 @@
 <footer class="footer">
   <div class="footer-logos">
     <a href="https://weill.cornell.edu/">
-      <img src="/images/logo/WCM_MB_LOGO_HZSS2L_CLR_RGB.png" alt="Weill Cornell Medicine Logo" class="footer-logo">
+      <img data-file="WCM_MB_LOGO_HZSS2L_CLR_RGB.png" alt="Weill Cornell Medicine Logo" class="footer-logo">
     </a>
     <div class="footer-divider"></div>
     <a href="https://tech.cornell.edu/">
-      <img src="/images/logo/Twisted-T-Lockup-Cornell-Red.png" alt="Cornell Tech Logo" class="footer-logo">
+      <img data-file="Twisted-T-Lockup-Cornell-Red.png" alt="Cornell Tech Logo" class="footer-logo">
     </a>
   </div>
 
@@ -68,5 +68,32 @@
 </style>
 
 <script>
-(()=>{const y=new Date().getFullYear();document.getElementById('current-year').textContent=y;document.querySelectorAll('.year-span').forEach(e=>e.textContent=y);const open=document.getElementById('open-legal-notice'),popup=document.getElementById('legal-notice-popup'),closeBtn=popup.querySelector('.legal-popup-close'),backdrop=popup.querySelector('.legal-popup-backdrop'),show=()=>{popup.classList.add('active');document.body.style.overflow='hidden'},hide=()=>{popup.classList.remove('active');document.body.style.overflow=''};open.addEventListener('click',e=>{e.preventDefault();show()});closeBtn.addEventListener('click',hide);backdrop.addEventListener('click',hide);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&popup.classList.contains('active'))hide()})})();
+(()=>{
+  const y=new Date().getFullYear();
+  document.getElementById('current-year').textContent=y;
+  document.querySelectorAll('.year-span').forEach(e=>e.textContent=y);
+
+  // Dynamic logo path adjustment so it works from subpages (e.g., team_members_subpage/*)
+  const isSub = window.location.pathname.includes('/team_members_subpage/');
+  const depthPrefix = isSub ? '../' : './';
+  document.querySelectorAll('img.footer-logo[data-file]').forEach(img=>{
+    const file = img.getAttribute('data-file');
+    if (!file) return;
+    // Only set if not already correct
+    const desired = depthPrefix + 'images/logo/' + file;
+    if (img.getAttribute('src') !== desired) img.setAttribute('src', desired);
+  });
+
+  // Legal notice popup logic
+  const open=document.getElementById('open-legal-notice');
+  const popup=document.getElementById('legal-notice-popup');
+  const closeBtn=popup.querySelector('.legal-popup-close');
+  const backdrop=popup.querySelector('.legal-popup-backdrop');
+  const show=()=>{popup.classList.add('active');document.body.style.overflow='hidden'};
+  const hide=()=>{popup.classList.remove('active');document.body.style.overflow=''};
+  open.addEventListener('click',e=>{e.preventDefault();show()});
+  closeBtn.addEventListener('click',hide);
+  backdrop.addEventListener('click',hide);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&popup.classList.contains('active'))hide()});
+})();
 </script>
