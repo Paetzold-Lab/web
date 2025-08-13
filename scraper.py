@@ -16,6 +16,86 @@ scholar_base_url = "https://scholar.google.com/citations"
 scholar_url = f"{scholar_base_url}?user={scholar_user_id}&hl=en&pagesize=100"
 output_json_path = "data/publications_scraped.json"
 publication_images_dir = "images/publications/thumbnails/"
+pdf_tmp_dir = "data/tmp_pdfs/"
+CATEGORY_KEYWORDS = {
+    'gnn': ['graph', 'gnn', 'relationformer'],
+    'generative': ['gan', 'generative', 'synthesis', 'flow', 'diffusion'],
+    'topology': ['topolog', 'betti', 'cldice', 'skeleton', 'persistence'],
+    'segmentation': ['segment', 'segmentation'],
+    'detection': ['detection', 'detect'],
+    'classification': ['classification', 'classify'],
+    'reconstruction': ['reconstruction', 'super-resolution', 'super resolution'],
+    'registration': ['registration', 'register'],
+    'microscopy': ['microscopy', 'oct', 'octl', 'retinal', 'vasculature'],
+    'mri': ['mri', 'perfusion'],
+    'ct': ['ct ' , 'computed tomography'],
+    'x-ray': ['x-ray', 'xray'],
+    'histology': ['histology'],
+}
+
+def categorize_publication(title: str) -> List[str]:
+    t = title.lower()
+    cats = []
+    for cat, kws in CATEGORY_KEYWORDS.items():
+        if any(kw in t for kw in kws):
+            cats.append(cat)
+    # de-duplicate preserving order
+    seen = set()
+    dedup = []
+    for c in cats:
+        if c not in seen:
+            dedup.append(c); seen.add(c)
+    return dedup
+
+def fetch_detail_page(relative_path: str) -> Optional[BeautifulSoup]:
+    if not relative_path:
+        return None
+    full_url = f"https://scholar.google.com{relative_path}"
+    try:
+        resp = requests.get(full_url, headers=REQUEST_HEADERS, timeout=20)
+        resp.raise_for_status()
+        return BeautifulSoup(resp.content, 'html.parser')
+    except requests.RequestException:
+        return None
+
+def extract_pdf_link(detail_soup: BeautifulSoup) -> Optional[str]:
+    if not detail_soup:
+        return None
+    # Links containing PDF
+    for a in detail_soup.select('a'):
+        text = (a.text or '').strip().lower()
+        href = a.get('href','')
+        if ('pdf' in text or href.lower().endswith('.pdf')) and href.startswith('http'):
+            return href
+    return None
+
+def download_pdf(url: str, save_path: str) -> bool:
+    try:
+        r = requests.get(url, headers=REQUEST_HEADERS, timeout=30)
+        r.raise_for_status()
+        with open(save_path, 'wb') as f:
+            f.write(r.content)
+        return True
+    except requests.RequestException:
+        return False
+
+def extract_overview_image_from_pdf(pdf_path: str, out_image_path: str) -> bool:
+    """Attempt to render first page of PDF as thumbnail. Requires PyMuPDF (fitz)."""
+    try:
+        import fitz  # type: ignore
+    except ImportError:
+        return False
+    try:
+        doc = fitz.open(pdf_path)
+        if doc.page_count == 0:
+            return False
+        page = doc.load_page(0)
+        pix = page.get_pixmap(matrix=fitz.Matrix(2,2))  # higher res
+        os.makedirs(os.path.dirname(out_image_path), exist_ok=True)
+        pix.save(out_image_path)
+        return True
+    except Exception:
+        return False
 default_local_thumbnail = "images/publications/default.png"
 REQUEST_HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
@@ -177,19 +257,40 @@ def scrape_publications(user_id: str) -> List[Dict]:
                     thumbnail_path = default_local_thumbnail
 
                 pub_id = f"scraped_{len(publications) + 1:03d}"
+                # Add extended schema fields matching original publications.json
+                cats = categorize_publication(parsed['title'])
+                primary_category = cats[0] if cats else None
+                scholar_rel = parsed['title_href']
+                detail_soup = fetch_detail_page(scholar_rel)
+                pdf_link = extract_pdf_link(detail_soup) if detail_soup else None
+                pdf_local_path = None
+                if pdf_link:
+                    ensure_dir(pdf_tmp_dir)
+                    pdf_local_path = os.path.join(pdf_tmp_dir, f"{filename_base}.pdf")
+                    if download_pdf(pdf_link, pdf_local_path):
+                        # Try to extract overview image from PDF first page
+                        pdf_thumb_path = os.path.join(publication_images_dir, f"{filename_base}_pdf.jpg")
+                        if extract_overview_image_from_pdf(pdf_local_path, pdf_thumb_path):
+                            thumbnail_path = pdf_thumb_path
+
                 publications.append({
                     "id": pub_id,
                     "title": parsed['title'],
                     "authors": parsed['authors_raw'],
                     "year": parsed['year'],
                     "venue": parsed['venue'],
-                    "thumbnail": thumbnail_path,
-                    "citations": parsed['citations'],
+                    "venue_tag": parsed['venue'].upper() if parsed['venue'] else None,
+                    "doi": None,
+                    "abstract": "",  # Not scraped here
                     "url": f"https://scholar.google.com{parsed['title_href']}",
-                    "abstract": "",
-                    "pdf_link": "",
-                    "categories": [],
-                    "featured": False
+                    "scholar_link": scholar_rel,
+                    "citations": parsed['citations'],
+                    "pdf_link": pdf_link or "",
+                    "categories": cats,
+                    "primary_category": primary_category,
+                    "thumbnail": thumbnail_path,
+                    "featured": False,
+                    "featuredOrder": 999
                 })
                 new_count += 1
 
