@@ -1,0 +1,17 @@
+{
+  "name": "Paetzold Lab",
+  "short_name": "Paetzold Lab",
+  "description": "Machine learning for computer vision and healthcare at Weill Cornell Medicine and Cornell Tech.",
+  "start_url": "/web/",
+  "scope": "/web/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "images/web_logo.png",
+      "sizes": "175x175",
+      "type": "image/png"
+    }
+  ]
+}
