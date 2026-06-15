@@ -649,6 +649,36 @@ img {
   z-index: 4;
 }
 
+.paper-collage[data-image-count="1"] .paper-collage-frame.primary {
+  grid-column: 1 / 13;
+  grid-row: 1 / 9;
+}
+
+.paper-collage[data-image-count="2"] .paper-collage-frame.primary {
+  grid-column: 1 / 13;
+  grid-row: 1 / 6;
+}
+
+.paper-collage[data-image-count="2"] .paper-collage-frame.secondary {
+  grid-column: 1 / 13;
+  grid-row: 6 / 9;
+}
+
+.paper-collage[data-image-count="3"] .paper-collage-frame.primary {
+  grid-column: 1 / 13;
+  grid-row: 1 / 6;
+}
+
+.paper-collage[data-image-count="3"] .paper-collage-frame.secondary {
+  grid-column: 1 / 7;
+  grid-row: 6 / 9;
+}
+
+.paper-collage[data-image-count="3"] .paper-collage-frame.tertiary {
+  grid-column: 7 / 13;
+  grid-row: 6 / 9;
+}
+
 .paper-zoom-open {
   overflow: hidden;
 }
@@ -932,7 +962,8 @@ img {
 
 .dot:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.86);
-  outline-offset: 2px;
+  outline-offset: -7px;
+  border-radius: 999px;
 }
 
 .dot.active::before {

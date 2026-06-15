@@ -37,39 +37,30 @@ const HERO_PUBLICATION_IDS = [
 const HERO_IMAGE_SETS = {
   auto_482c89c131: [
     { src: "./images/publications/hero/auto_482c89c131-primary.jpg", label: "Light-sheet microscopy task examples" },
-    { src: "./images/publications/hero/auto_482c89c131-workflow.jpg", label: "Pretraining framework", position: "left center" },
     { src: "./images/publications/hero/auto_482c89c131-results.jpg", label: "Few-shot task performance" },
     { src: "./images/publications/hero/auto_482c89c131-finetune.jpg", label: "Finetuning examples" }
   ],
   auto_09034b913d: [
     { src: "./images/publications/hero/auto_09034b913d-primary.jpg", label: "Gradient surgery visual analysis" },
-    { src: "./images/publications/hero/auto_09034b913d-fundus.jpg", label: "Retinal vessel prediction comparison" },
-    { src: "./images/publications/hero/auto_09034b913d-gradient.jpg", label: "Gradient dynamics curves" },
-    { src: "./images/publications/hero/auto_09034b913d-maps.jpg", label: "Gradient map comparison" }
+    { src: "./images/publications/hero/auto_09034b913d-gradient.jpg", label: "Gradient dynamics curves" }
   ],
   auto_74ca8cdcb0: [
     { src: "./images/publications/hero/auto_74ca8cdcb0-primary.jpg", label: "VERITAS architecture and evidence flow" },
     { src: "./images/publications/hero/auto_74ca8cdcb0-phases.jpg", label: "Analysis phases" },
-    { src: "./images/publications/hero/auto_74ca8cdcb0-provenance.jpg", label: "Artifact provenance graph" },
-    { src: "./images/publications/hero/auto_74ca8cdcb0-evidence.jpg", label: "Evidence labels" }
+    { src: "./images/publications/hero/auto_74ca8cdcb0-provenance.jpg", label: "Artifact provenance graph" }
   ],
   auto_82686f45e6: [
     { src: "./images/publications/hero/auto_82686f45e6-primary.jpg", label: "Biplanar DSA-to-CTA registration geometry" },
-    { src: "./images/publications/hero/auto_82686f45e6-method.jpg", label: "GeoReg method overview" },
-    { src: "./images/publications/hero/auto_82686f45e6-geometry.jpg", label: "Pose optimization geometry" },
-    { src: "./images/publications/hero/auto_82686f45e6-dsa.jpg", label: "DSA sequence alignment", position: "center top" }
+    { src: "./images/publications/hero/auto_82686f45e6-method.jpg", label: "GeoReg method overview" }
   ],
   auto_ebdd832b58: [
-    { src: "./images/publications/hero/auto_ebdd832b58-architecture.jpg", label: "MELD training architecture" },
     { src: "./images/publications/hero/auto_ebdd832b58-primary.jpg", label: "MELD overview", position: "right center" },
-    { src: "./images/publications/hero/auto_ebdd832b58-umap.jpg", label: "Generator separability embedding" },
-    { src: "./images/publications/hero/auto_ebdd832b58-attack.jpg", label: "Attack invariance embedding" }
+    { src: "./images/publications/hero/auto_ebdd832b58-umap.jpg", label: "Generator separability embedding" }
   ],
   auto_6295fd2b61: [
     { src: "./images/publications/hero/auto_6295fd2b61-primary.jpg", label: "Synthetic vasculature reasoning framework" },
     { src: "./images/publications/hero/auto_6295fd2b61-pathology.jpg", label: "Synthetic DR pathologies" },
-    { src: "./images/publications/hero/auto_6295fd2b61-reasoning.jpg", label: "OCTA reasoning example" },
-    { src: "./images/publications/hero/auto_6295fd2b61-eval.jpg", label: "Zero-shot reasoning tasks" }
+    { src: "./images/publications/hero/auto_6295fd2b61-reasoning.jpg", label: "OCTA reasoning example" }
   ],
   pub119: [
     { src: "./images/publications/hero/pub119-primary.jpg", label: "Graph-based VLM method overview" },
@@ -85,7 +76,7 @@ const HERO_IMAGE_SETS = {
   ]
 };
 
-const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615p";
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615q";
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -269,10 +260,13 @@ function heroCollageItems(pub) {
   const imageSet = HERO_IMAGE_SETS[pub?.id] || [
     { src: publicationImage(pub), label: pub?.title || "Featured research" }
   ];
-  return classes.map((className, offset) => {
-    const item = imageSet[offset % imageSet.length];
+  const uniqueItems = imageSet
+    .filter(item => normalizeLink(item.src))
+    .filter((item, index, array) => array.findIndex(other => normalizeLink(other.src) === normalizeLink(item.src)) === index)
+    .slice(0, classes.length);
+  return uniqueItems.map((item, offset) => {
     return {
-      className,
+      className: classes[offset],
       src: normalizeLink(item.src) || publicationImage(pub),
       position: item.position || "center",
       title: item.label ? `${pub?.title || "Featured research"} - ${item.label}` : pub?.title || "Featured research"
@@ -365,7 +359,7 @@ function renderHeroPublications(pubs) {
     return `
       <div class="carousel-slide paper-slide">
         <div class="paper-bg">
-          <div class="paper-collage" data-paper-id="${escapeHTML(pub.id || "")}" aria-label="Featured research image collage for ${escapeHTML(pub.title || "paper")}">
+          <div class="paper-collage" data-paper-id="${escapeHTML(pub.id || "")}" data-image-count="${collageItems.length}" aria-label="Featured research image collage for ${escapeHTML(pub.title || "paper")}">
             ${collageItems.map((item, imageIndex) => `
               <button type="button" class="paper-collage-frame ${item.className}" style="--paper-image:url('${escapeHTML(item.src)}');--paper-image-position:${escapeHTML(item.position)}" data-zoom-src="${escapeHTML(item.src)}" data-zoom-title="${escapeHTML(item.title)}" aria-label="Preview ${escapeHTML(item.title)}">
                 <img src="${escapeHTML(item.src)}" alt="${escapeHTML(item.title)}" ${heroImageAttrs(index, imageIndex)} onerror="this.onerror=null;this.src='./images/publications/default.png';">
