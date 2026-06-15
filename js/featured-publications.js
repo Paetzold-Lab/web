@@ -76,7 +76,7 @@ const HERO_IMAGE_SETS = {
   ]
 };
 
-const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615q";
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615r";
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
