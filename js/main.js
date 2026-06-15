@@ -266,6 +266,7 @@ function initializeCarousel() {
   const slides = [...wrap.querySelectorAll(".carousel-slide")];
   if (!slides.length) return;
 
+  const carousel = wrap.closest(".hero-carousel");
   const dots = [...document.querySelectorAll("#carousel-indicators .dot")];
   const prev = document.getElementById("carousel-prev");
   const next = document.getElementById("carousel-next");
@@ -275,12 +276,12 @@ function initializeCarousel() {
   const update = () => {
     idx = (idx + slides.length) % slides.length;
     wrap.style.transform = `translateX(-${idx * 100}%)`;
-    dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+    dots.forEach((d, i) => {
+      const active = i === idx;
+      d.classList.toggle("active", active);
+      d.setAttribute("aria-current", active ? "true" : "false");
+    });
   };
-
-  dots.forEach((d, i) => (d.onclick = () => ((idx = i), update())));
-  if (prev) prev.onclick = () => ((idx = idx - 1), update());
-  if (next) next.onclick = () => ((idx = idx + 1), update());
 
   const startTimer = () => {
     if (slides.length <= 1 || isReducedMotion() || document.hidden) return;
@@ -290,6 +291,67 @@ function initializeCarousel() {
     if (wrap.carouselTimer) clearInterval(wrap.carouselTimer);
     wrap.carouselTimer = null;
   };
+
+  const goTo = nextIndex => {
+    idx = nextIndex;
+    update();
+    stopTimer();
+    startTimer();
+  };
+
+  dots.forEach((d, i) => (d.onclick = () => goTo(i)));
+  if (prev) prev.onclick = () => goTo(idx - 1);
+  if (next) next.onclick = () => goTo(idx + 1);
+
+  if (carousel && !carousel.dataset.swipeBound) {
+    let startX = 0;
+    let startY = 0;
+    let tracking = false;
+
+    carousel.addEventListener("touchstart", event => {
+      if (event.touches.length !== 1) return;
+      startX = event.touches[0].clientX;
+      startY = event.touches[0].clientY;
+      tracking = true;
+      stopTimer();
+    }, { passive: true });
+
+    carousel.addEventListener("touchend", event => {
+      if (!tracking) return;
+      tracking = false;
+      const touch = event.changedTouches[0];
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
+      if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        goTo(idx + (dx < 0 ? 1 : -1));
+      } else {
+        startTimer();
+      }
+    }, { passive: true });
+
+    carousel.addEventListener("pointerdown", event => {
+      if (event.pointerType !== "mouse" || event.button !== 0) return;
+      startX = event.clientX;
+      startY = event.clientY;
+      tracking = true;
+      stopTimer();
+    });
+
+    carousel.addEventListener("pointerup", event => {
+      if (!tracking || event.pointerType !== "mouse") return;
+      tracking = false;
+      const dx = event.clientX - startX;
+      const dy = event.clientY - startY;
+      if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+        goTo(idx + (dx < 0 ? 1 : -1));
+      } else {
+        startTimer();
+      }
+    });
+
+    carousel.dataset.swipeBound = "true";
+  }
+
   startTimer();
   if (!wrap.dataset.visibilityBound) {
     document.addEventListener("visibilitychange", () => {

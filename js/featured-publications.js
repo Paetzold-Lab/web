@@ -85,7 +85,7 @@ const HERO_IMAGE_SETS = {
   ]
 };
 
-const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615o";
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615p";
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -367,7 +367,7 @@ function renderHeroPublications(pubs) {
         <div class="paper-bg">
           <div class="paper-collage" data-paper-id="${escapeHTML(pub.id || "")}" aria-label="Featured research image collage for ${escapeHTML(pub.title || "paper")}">
             ${collageItems.map((item, imageIndex) => `
-              <button type="button" class="paper-collage-frame ${item.className}" style="--paper-image-position:${escapeHTML(item.position)}" data-zoom-src="${escapeHTML(item.src)}" data-zoom-title="${escapeHTML(item.title)}" aria-label="Preview ${escapeHTML(item.title)}">
+              <button type="button" class="paper-collage-frame ${item.className}" style="--paper-image:url('${escapeHTML(item.src)}');--paper-image-position:${escapeHTML(item.position)}" data-zoom-src="${escapeHTML(item.src)}" data-zoom-title="${escapeHTML(item.title)}" aria-label="Preview ${escapeHTML(item.title)}">
                 <img src="${escapeHTML(item.src)}" alt="${escapeHTML(item.title)}" ${heroImageAttrs(index, imageIndex)} onerror="this.onerror=null;this.src='./images/publications/default.png';">
               </button>`).join("")}
           </div>
@@ -387,7 +387,7 @@ function renderHeroPublications(pubs) {
   }).join("");
 
   indicators.innerHTML = heroPubs
-    .map((_, index) => `<span class="dot ${index === 0 ? "active" : ""}" aria-label="Go to featured research ${index + 1}"></span>`)
+    .map((pub, index) => `<button type="button" class="dot ${index === 0 ? "active" : ""}" aria-label="Go to featured research ${index + 1}: ${escapeHTML(pub.title || "paper")}" aria-current="${index === 0 ? "true" : "false"}"></button>`)
     .join("");
 
   window.initializeCarousel?.();
