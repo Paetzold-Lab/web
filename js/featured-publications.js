@@ -33,7 +33,59 @@ const HERO_PUBLICATION_IDS = [
   "auto_ebdd832b58", // Chenjun Li: MELD
   "auto_6295fd2b61"  // Chenjun/Laurin/Alex: medical VLM
 ];
-const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615n";
+
+const HERO_IMAGE_SETS = {
+  auto_482c89c131: [
+    { src: "./images/publications/hero/auto_482c89c131-primary.jpg", label: "Light-sheet microscopy task examples" },
+    { src: "./images/publications/hero/auto_482c89c131-workflow.jpg", label: "Pretraining framework", position: "left center" },
+    { src: "./images/publications/hero/auto_482c89c131-results.jpg", label: "Few-shot task performance" },
+    { src: "./images/publications/hero/auto_482c89c131-finetune.jpg", label: "Finetuning examples" }
+  ],
+  auto_09034b913d: [
+    { src: "./images/publications/hero/auto_09034b913d-primary.jpg", label: "Gradient surgery visual analysis" },
+    { src: "./images/publications/hero/auto_09034b913d-fundus.jpg", label: "Retinal vessel prediction comparison" },
+    { src: "./images/publications/hero/auto_09034b913d-gradient.jpg", label: "Gradient dynamics curves" },
+    { src: "./images/publications/hero/auto_09034b913d-maps.jpg", label: "Gradient map comparison" }
+  ],
+  auto_74ca8cdcb0: [
+    { src: "./images/publications/hero/auto_74ca8cdcb0-primary.jpg", label: "VERITAS architecture and evidence flow" },
+    { src: "./images/publications/hero/auto_74ca8cdcb0-phases.jpg", label: "Analysis phases" },
+    { src: "./images/publications/hero/auto_74ca8cdcb0-provenance.jpg", label: "Artifact provenance graph" },
+    { src: "./images/publications/hero/auto_74ca8cdcb0-evidence.jpg", label: "Evidence labels" }
+  ],
+  auto_82686f45e6: [
+    { src: "./images/publications/hero/auto_82686f45e6-primary.jpg", label: "Biplanar DSA-to-CTA registration geometry" },
+    { src: "./images/publications/hero/auto_82686f45e6-method.jpg", label: "GeoReg method overview" },
+    { src: "./images/publications/hero/auto_82686f45e6-geometry.jpg", label: "Pose optimization geometry" },
+    { src: "./images/publications/hero/auto_82686f45e6-dsa.jpg", label: "DSA sequence alignment", position: "center top" }
+  ],
+  auto_ebdd832b58: [
+    { src: "./images/publications/hero/auto_ebdd832b58-architecture.jpg", label: "MELD training architecture" },
+    { src: "./images/publications/hero/auto_ebdd832b58-primary.jpg", label: "MELD overview", position: "right center" },
+    { src: "./images/publications/hero/auto_ebdd832b58-umap.jpg", label: "Generator separability embedding" },
+    { src: "./images/publications/hero/auto_ebdd832b58-attack.jpg", label: "Attack invariance embedding" }
+  ],
+  auto_6295fd2b61: [
+    { src: "./images/publications/hero/auto_6295fd2b61-primary.jpg", label: "Synthetic vasculature reasoning framework" },
+    { src: "./images/publications/hero/auto_6295fd2b61-pathology.jpg", label: "Synthetic DR pathologies" },
+    { src: "./images/publications/hero/auto_6295fd2b61-reasoning.jpg", label: "OCTA reasoning example" },
+    { src: "./images/publications/hero/auto_6295fd2b61-eval.jpg", label: "Zero-shot reasoning tasks" }
+  ],
+  pub119: [
+    { src: "./images/publications/hero/pub119-primary.jpg", label: "Graph-based VLM method overview" },
+    { src: "./images/publications/hero/pub119-tuning.jpg", label: "Instruction tuning example" },
+    { src: "./images/publications/hero/pub119-interpretability.jpg", label: "Interpretability comparison" },
+    { src: "./images/publications/hero/pub119-octa.jpg", label: "OCTA heatmap detail", position: "center top" }
+  ],
+  pub002: [
+    { src: "./images/publications/hero/pub002-primary.jpg", label: "Soft-clDice topology-preserving workflow" },
+    { src: "./images/publications/hero/pub002-input.jpg", label: "Retinal input image" },
+    { src: "./images/publications/hero/pub002-mask.jpg", label: "Mask and soft skeleton comparison" },
+    { src: "./images/publications/hero/pub002-module.jpg", label: "Soft-clDice module" }
+  ]
+};
+
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615o";
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -212,14 +264,18 @@ function selectHeroPublications(pubs) {
   return selected.slice(0, HERO_PUBLICATION_IDS.length);
 }
 
-function heroCollageItems(heroPubs, index) {
+function heroCollageItems(pub) {
   const classes = ["primary", "secondary", "tertiary", "quaternary"];
+  const imageSet = HERO_IMAGE_SETS[pub?.id] || [
+    { src: publicationImage(pub), label: pub?.title || "Featured research" }
+  ];
   return classes.map((className, offset) => {
-    const pub = heroPubs[(index + offset) % heroPubs.length];
+    const item = imageSet[offset % imageSet.length];
     return {
       className,
-      src: publicationImage(pub),
-      title: pub?.title || "Featured research"
+      src: normalizeLink(item.src) || publicationImage(pub),
+      position: item.position || "center",
+      title: item.label ? `${pub?.title || "Featured research"} - ${item.label}` : pub?.title || "Featured research"
     };
   });
 }
@@ -305,13 +361,13 @@ function renderHeroPublications(pubs) {
     const categories = visibleCategories(pub, 2);
     const summary = truncate(pub.summary || pub.abstract || formatVenue(pub.venue), 160);
     const venue = formatVenue(pub.venue);
-    const collageItems = heroCollageItems(heroPubs, index);
+    const collageItems = heroCollageItems(pub);
     return `
       <div class="carousel-slide paper-slide">
         <div class="paper-bg">
-          <div class="paper-collage" aria-label="Featured research image collage">
+          <div class="paper-collage" data-paper-id="${escapeHTML(pub.id || "")}" aria-label="Featured research image collage for ${escapeHTML(pub.title || "paper")}">
             ${collageItems.map((item, imageIndex) => `
-              <button type="button" class="paper-collage-frame ${item.className}" data-zoom-src="${escapeHTML(item.src)}" data-zoom-title="${escapeHTML(item.title)}" aria-label="Preview ${escapeHTML(item.title)}">
+              <button type="button" class="paper-collage-frame ${item.className}" style="--paper-image-position:${escapeHTML(item.position)}" data-zoom-src="${escapeHTML(item.src)}" data-zoom-title="${escapeHTML(item.title)}" aria-label="Preview ${escapeHTML(item.title)}">
                 <img src="${escapeHTML(item.src)}" alt="${escapeHTML(item.title)}" ${heroImageAttrs(index, imageIndex)} onerror="this.onerror=null;this.src='./images/publications/default.png';">
               </button>`).join("")}
           </div>

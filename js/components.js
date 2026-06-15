@@ -1,4 +1,4 @@
-const COMPONENT_VERSION = "20260615n";
+const COMPONENT_VERSION = "20260615o";
 const COMPONENT_SCRIPT_URL = document.currentScript?.src
   ? new URL(document.currentScript.src, document.baseURI)
   : new URL("./js/components.js", document.baseURI);
