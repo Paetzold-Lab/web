@@ -10,9 +10,68 @@ document.addEventListener("DOMContentLoaded", () => {
   initializeCollaboratorScrolling();
 });
 
+const SEARCH_PAGES = [
+  "index.html",
+  "team.html",
+  "research.html",
+  "join_us.html",
+  "contact.html",
+  "pi.html"
+];
+const MAX_SEARCH_RESULTS = 12;
+let searchIndexPromise = null;
+
+function siteAssetPath(path) {
+  if (window.PaetzoldSite?.assetPath) return window.PaetzoldSite.assetPath(path);
+  const isSubpage = window.location.pathname.includes("/team_members_subpage/");
+  return `${isSubpage ? "../" : "./"}${String(path || "").replace(/^\.?\//, "")}`;
+}
+
+function isReducedMotion() {
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+}
+
+function debounce(fn, wait = 120) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), wait);
+  };
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlightTerm(value, term) {
+  const text = String(value ?? "");
+  const query = String(term ?? "");
+  if (!query) return escapeHTML(text);
+  const re = new RegExp(escapeRegExp(query), "gi");
+  let lastIndex = 0;
+  let output = "";
+  text.replace(re, (match, offset) => {
+    output += escapeHTML(text.slice(lastIndex, offset));
+    output += `<span class="highlight">${escapeHTML(match)}</span>`;
+    lastIndex = offset + match.length;
+    return match;
+  });
+  return output + escapeHTML(text.slice(lastIndex));
+}
+
 function initializeHeader() {
   const bar = document.getElementById("progress-bar");
-  if (bar) {
+  if (bar && !isReducedMotion()) {
     const d = 1300 + Math.random() * 400;
     bar.style.width = 0;
     bar.style.transition = `width ${d}ms cubic-bezier(0.4,0,0.2,1)`;
@@ -25,6 +84,7 @@ function initializeHeader() {
       const o = document.getElementById("search-overlay");
       if (!o) return;
       o.classList.add("active");
+      document.dispatchEvent(new CustomEvent("search-overlay-open"));
       setTimeout(() => document.querySelector(".search-input")?.focus(), 300);
     });
 }
@@ -35,19 +95,28 @@ function initializeUI() {
       e.target.closest(".overlay")?.classList.remove("active");
   });
 
+  if (!("IntersectionObserver" in window) || isReducedMotion()) {
+    document.querySelectorAll(".pub-card").forEach(c => {
+      c.style.opacity = 1;
+      c.style.transform = "none";
+    });
+    return;
+  }
+
   const title = document.querySelector(".typing-title");
   if (title) {
-    new IntersectionObserver(
+    const titleObserver = new IntersectionObserver(
       entries => {
         entries.forEach(en => {
           if (en.isIntersecting) {
             en.target.classList.add("animate");
-            observer.unobserve(en.target);
+            titleObserver.unobserve(en.target);
           }
         });
       },
       { threshold: 0.5 }
-    ).observe(title);
+    );
+    titleObserver.observe(title);
   }
 
   const observer = new IntersectionObserver(
@@ -65,89 +134,170 @@ function initializeUI() {
 function initializeSearch() {
   const input = document.querySelector(".search-input");
   const results = document.querySelector(".search-results");
-  if (!input) return;
+  if (!input || !results) return;
 
-  const pages = [
-    "./index.html",
-    "./team.html",
-    "./research.html",
-    "./join_us.html",
-    "./contact.html",
-    "./pi.html"
-  ];
+  const renderResults = async () => {
+    const rawQuery = input.value.trim();
+    const q = rawQuery.toLowerCase();
+    if (!q) {
+      results.innerHTML = "";
+      return;
+    }
 
-  let index = [];
-  (async () => {
-    index = (
-      await Promise.all(
-        pages.map(async p => {
-          try {
-            const r = await fetch(p);
-            if (!r.ok) return null;
-            const html = await r.text();
-            const d = new DOMParser().parseFromString(html, "text/html");
-            return {
-              title: d.title,
-              url: p.replace("./", ""),
-              content: d.body.textContent.replace(/\s+/g, " ").trim()
-            };
-          } catch {
-            return null;
-          }
-        })
-      )
-    ).filter(Boolean);
-  })();
+    results.innerHTML = '<div class="search-result-item is-loading">Searching...</div>';
+    const index = await getSearchIndex();
+    if (input.value.trim().toLowerCase() !== q) return;
 
-  input.addEventListener("input", e => {
-    const q = e.target.value.toLowerCase();
-    if (!q) return (results.innerHTML = "");
+    const matches = index
+      .filter(p => p.searchTitle.includes(q) || p.searchContent.includes(q))
+      .slice(0, MAX_SEARCH_RESULTS);
 
-    results.innerHTML = index
-      .filter(
-        p =>
-          p.title.toLowerCase().includes(q) ||
-          p.content.toLowerCase().includes(q)
-      )
+    if (!matches.length) {
+      results.innerHTML = '<div class="search-result-item is-empty">No results found.</div>';
+      return;
+    }
+
+    results.innerHTML = matches
       .map(p => {
-        const hilite = str => str.replace(new RegExp(q, "gi"), m => `<span class="highlight">${m}</span>`);
-        const title = hilite(p.title);
-
         let snippet = p.content;
-        const i = snippet.toLowerCase().indexOf(q);
+        const i = p.searchContent.indexOf(q);
         if (i > -1) {
-          const s = Math.max(0, i - 50);
-          const e = Math.min(snippet.length, i + q.length + 50);
+          const s = Math.max(0, i - 56);
+          const e = Math.min(snippet.length, i + rawQuery.length + 72);
           snippet = (s ? "..." : "") + snippet.slice(s, e) + (e < p.content.length ? "..." : "");
         }
-        snippet = hilite(snippet);
 
-        return `<div class="search-result-item" onclick="window.location='${p.url}'"><h3>${title}</h3><p>${snippet}</p></div>`;
+        return `
+          <div class="search-result-item" data-url="${escapeHTML(p.url)}">
+            <h3>${highlightTerm(p.title, rawQuery)}</h3>
+            <p>${highlightTerm(snippet, rawQuery)}</p>
+          </div>`;
       })
       .join("");
+  };
+
+  const debouncedRender = debounce(renderResults, 120);
+  input.addEventListener("input", debouncedRender);
+  input.addEventListener("focus", () => {
+    if (!searchIndexPromise) getSearchIndex();
+  }, { once: true });
+  document.addEventListener("search-overlay-open", () => getSearchIndex(), { once: true });
+
+  results.addEventListener("click", e => {
+    const item = e.target.closest(".search-result-item");
+    if (item?.dataset.url) window.location.href = item.dataset.url;
   });
+}
+
+async function getSearchIndex() {
+  if (searchIndexPromise) return searchIndexPromise;
+  searchIndexPromise = buildSearchIndex().catch(error => {
+    console.warn("Unable to build search index", error);
+    return [];
+  });
+  return searchIndexPromise;
+}
+
+async function buildSearchIndex() {
+  const pageIndex = (
+    await Promise.all(
+      SEARCH_PAGES.map(async page => {
+        try {
+          const r = await fetch(siteAssetPath(page));
+          if (!r.ok) return null;
+          const html = await r.text();
+          const doc = new DOMParser().parseFromString(html, "text/html");
+          return normalizeSearchEntry({
+            title: doc.title || page,
+            url: siteAssetPath(page),
+            content: doc.body.textContent.replace(/\s+/g, " ").trim()
+          });
+        } catch {
+          return null;
+        }
+      })
+    )
+  ).filter(Boolean);
+
+  let publicationIndex = [];
+  try {
+    const r = await fetch(siteAssetPath("data/publications.json"));
+    if (r.ok) {
+      const data = await r.json();
+      publicationIndex = (data.publications || []).map(p => normalizeSearchEntry({
+        title: p.title,
+        url: `${siteAssetPath("research.html")}?q=${encodeURIComponent(p.title || "")}`,
+        content: [
+          p.title,
+          p.authors,
+          p.venue,
+          p.year,
+          p.summary,
+          p.abstract,
+          (p.source_members || []).join(" "),
+          (p.categories || []).join(" "),
+          (p.llm_tags || []).join(" ")
+        ].filter(Boolean).join(" ")
+      }));
+    }
+  } catch {
+    publicationIndex = [];
+  }
+
+  return [...pageIndex, ...publicationIndex];
+}
+
+function normalizeSearchEntry(entry) {
+  const title = String(entry.title || "Untitled").replace(/\s+/g, " ").trim();
+  const content = String(entry.content || "").replace(/\s+/g, " ").trim();
+  return {
+    title,
+    content,
+    url: entry.url,
+    searchTitle: title.toLowerCase(),
+    searchContent: content.toLowerCase()
+  };
 }
 
 function initializeCarousel() {
   const wrap = document.getElementById("carousel-wrapper");
   if (!wrap) return;
 
-  const slides = [...document.querySelectorAll(".carousel-slide")];
-  const dots = [...document.querySelectorAll(".dot")];
+  const slides = [...wrap.querySelectorAll(".carousel-slide")];
+  if (!slides.length) return;
+
+  const dots = [...document.querySelectorAll("#carousel-indicators .dot")];
   const prev = document.getElementById("carousel-prev");
   const next = document.getElementById("carousel-next");
+  if (wrap.carouselTimer) clearInterval(wrap.carouselTimer);
   let idx = 0;
 
   const update = () => {
+    idx = (idx + slides.length) % slides.length;
     wrap.style.transform = `translateX(-${idx * 100}%)`;
     dots.forEach((d, i) => d.classList.toggle("active", i === idx));
   };
 
-  dots.forEach((d, i) => d.addEventListener("click", () => ((idx = i), update())));
-  prev?.addEventListener("click", () => ((idx = (idx - 1 + slides.length) % slides.length), update()));
-  next?.addEventListener("click", () => ((idx = (idx + 1) % slides.length), update()));
+  dots.forEach((d, i) => (d.onclick = () => ((idx = i), update())));
+  if (prev) prev.onclick = () => ((idx = idx - 1), update());
+  if (next) next.onclick = () => ((idx = idx + 1), update());
 
-  if (slides.length > 1) setInterval(() => ((idx = (idx + 1) % slides.length), update()), 8e3);
+  const startTimer = () => {
+    if (slides.length <= 1 || isReducedMotion() || document.hidden) return;
+    wrap.carouselTimer = setInterval(() => ((idx = idx + 1), update()), 8e3);
+  };
+  const stopTimer = () => {
+    if (wrap.carouselTimer) clearInterval(wrap.carouselTimer);
+    wrap.carouselTimer = null;
+  };
+  startTimer();
+  if (!wrap.dataset.visibilityBound) {
+    document.addEventListener("visibilitychange", () => {
+      stopTimer();
+      startTimer();
+    });
+    wrap.dataset.visibilityBound = "true";
+  }
 
   document.querySelectorAll(".video-bg video").forEach(v => (v.playbackRate = 0.7));
   update();
@@ -183,14 +333,16 @@ function initializeContactForm() {
   form.addEventListener("submit", e => {
     e.preventDefault();
     const btn = form.querySelector(".submit-btn");
+    if (!btn) return;
     btn.dataset.originalText ||= btn.innerHTML;
     btn.innerHTML = "Sending...";
     btn.disabled = true;
 
+    const formData = new FormData(form);
     const data = {
-      name: form.name?.value || "",
-      email: form.email?.value || "",
-      message: form.message?.value || ""
+      name: formData.get("name") || document.getElementById("name")?.value || "",
+      email: formData.get("email") || document.getElementById("email")?.value || "",
+      message: formData.get("message") || document.getElementById("message")?.value || ""
     };
 
     fetch(
@@ -214,7 +366,7 @@ function initializeContactForm() {
       })
       .catch(() => {
         btn.innerHTML = "Failed to Send";
-        btn.style.backgroundColor = "#F44336";
+        btn.style.backgroundColor = "#333";
         setTimeout(() => {
           btn.innerHTML = btn.dataset.originalText;
           btn.style.backgroundColor = "";
@@ -226,28 +378,49 @@ function initializeContactForm() {
 
 function initializeGallery() {
   const wrap = document.querySelector(".cards-scroll-wrapper.infinite-scroll");
-  if (!wrap || wrap.classList.contains("cloned")) return;
+  if (!wrap || wrap.dataset.galleryInitialized) return;
+  wrap.dataset.galleryInitialized = "true";
 
   const cards = [...wrap.querySelectorAll(".small-card:not(.clone)")];
-  wrap.querySelectorAll(".small-card.clone").forEach(c => c.remove());
+  if (!cards.length) return;
 
-  for (let i = 0; i < 3; i++)
-    cards.forEach(c => {
-      const clone = c.cloneNode(true);
-      clone.classList.add("clone");
-      wrap.appendChild(clone);
-    });
+  const rebuild = () => {
+    wrap.querySelectorAll(".small-card.clone").forEach(c => c.remove());
+    if (isReducedMotion()) {
+      wrap.classList.add("is-static");
+      wrap.style.animation = "none";
+      return;
+    }
 
-  wrap.classList.add("cloned");
-  wrap.style.animation = "none";
-  wrap.offsetHeight;
-  wrap.style.animation = "scrollLeft 90s linear infinite";
+    wrap.classList.remove("is-static");
+    const baseWidth = cards.reduce((sum, card) => sum + card.getBoundingClientRect().width + 16, 0);
+    const repeatCount = Math.max(2, Math.ceil((window.innerWidth * 2.2) / Math.max(baseWidth, 1)));
+    for (let i = 0; i < repeatCount; i++) {
+      cards.forEach(card => {
+        const clone = card.cloneNode(true);
+        clone.classList.add("clone");
+        clone.setAttribute("aria-hidden", "true");
+        clone.querySelectorAll("img").forEach(img => {
+          img.loading = "lazy";
+          img.decoding = "async";
+        });
+        wrap.appendChild(clone);
+      });
+    }
 
-  window.addEventListener("resize", () => {
     wrap.style.animation = "none";
     wrap.offsetHeight;
-    wrap.style.animation = "scrollLeft 90s linear infinite";
-  });
+    wrap.style.animation = `scrollLeft ${Math.max(75, cards.length * 10)}s linear infinite`;
+  };
+
+  const scheduleRebuild = debounce(() => requestAnimationFrame(rebuild), 180);
+  rebuild();
+  if ("ResizeObserver" in window) {
+    const resizeObserver = new ResizeObserver(scheduleRebuild);
+    resizeObserver.observe(wrap.parentElement || wrap);
+  } else {
+    window.addEventListener("resize", scheduleRebuild);
+  }
 }
 
 function initializeCollaboratorScrolling() {

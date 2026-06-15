@@ -1,0 +1,9 @@
+.DS_Store
+Thumbs.db
+*.log
+__pycache__/
+*.pyc
+data/cache/
+data/tmp_pdfs/
+data/publications.preview.json
+images/team/source/

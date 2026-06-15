@@ -1,3 +1,21 @@
+const COMPONENT_VERSION = "20260615n";
+const COMPONENT_SCRIPT_URL = document.currentScript?.src
+  ? new URL(document.currentScript.src, document.baseURI)
+  : new URL("./js/components.js", document.baseURI);
+const SITE_ROOT_URL = new URL("../", COMPONENT_SCRIPT_URL);
+
+function assetPath(path) {
+  const cleanPath = String(path || "").replace(/^\.?\//, "");
+  return new URL(cleanPath, SITE_ROOT_URL).href;
+}
+
+window.PaetzoldSite = {
+  ...(window.PaetzoldSite || {}),
+  assetBasePath: SITE_ROOT_URL.href,
+  assetPath,
+  componentVersion: COMPONENT_VERSION
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   const components = [
     { placeholder: "header-placeholder", name: "header" },
@@ -13,10 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function loadComponent(name, target) {
-  const isSubpage = window.location.pathname.includes('/team_members_subpage/');
-  const basePath = isSubpage ? '../' : './';
+  const url = new URL(`components/${name}.html`, SITE_ROOT_URL);
+  url.searchParams.set("v", COMPONENT_VERSION);
 
-  fetch(`${basePath}components/${name}.html`)
+  fetch(url.href)
     .then(r => {
       if (!r.ok) throw new Error(r.status);
       return r.text();
@@ -31,8 +49,10 @@ function loadComponent(name, target) {
       });
       document.dispatchEvent(new CustomEvent(`${name}-loaded`));
     })
-    .catch(() => {
-      target.innerHTML = `<div class="component-placeholder">${name} placeholder</div>`;
+    .catch(error => {
+      target.dataset.componentError = name;
+      target.innerHTML = "";
+      console.warn(`Unable to load ${name} component`, error);
       document.dispatchEvent(new CustomEvent(`${name}-loaded`));
     });
 }

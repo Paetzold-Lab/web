@@ -1,6 +1,6 @@
 <header class="header">
   <div class="header-inner">
-    <div class="logo">Paetzold Lab</div>
+    <a class="logo" id="nav-logo" href="index.html">Paetzold Lab</a>
 
     <nav class="top-nav">
       <ul>
@@ -12,7 +12,7 @@
     </nav>
 
     <div class="nav-right">
-      <button class="search-btn" aria-label="Open search">🔍</button>
+      <button class="search-btn" aria-label="Open search"><span class="search-icon" aria-hidden="true"></span></button>
     </div>
   </div>
 
@@ -26,31 +26,33 @@
 (function initHeader(){
   function run(){
     // --- Set active nav link ---
+    const isInSubdirectory = window.location.pathname.includes('/team_members_subpage/');
     const file = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const map  = {
       'index.html'   : 'nav-home',
       'research.html': 'nav-research',
       'team.html'    : 'nav-team',
       'join_us.html' : 'nav-join',
-      'contact.html' : 'nav-contact',
       'pi.html'      : 'nav-team'
     };
-    const activeLink = document.getElementById(map[file]);
+    const activeLink = document.getElementById(isInSubdirectory ? 'nav-team' : map[file]);
     if (activeLink) activeLink.classList.add('active');
 
-    // --- Adjust links when inside team member subpage directory ---
-    const isInSubdirectory = window.location.pathname.includes('/team_members_subpage/');
-    if (isInSubdirectory) {
-      document.querySelectorAll('.top-nav a').forEach(link => {
-        const href = link.getAttribute('href');
-        if (!href) return;
-        // Only modify relative (non-absolute + non-protocol) links
-        if (href.startsWith('http') || href.startsWith('/') ) return;
-        // Avoid double prefixing
-        if (href.startsWith('../')) return;
-        link.setAttribute('href', `../${href}`);
-      });
-    }
+    const hrefs = {
+      'nav-logo': 'index.html',
+      'nav-home': 'index.html',
+      'nav-research': 'research.html',
+      'nav-team': 'team.html',
+      'nav-join': 'join_us.html'
+    };
+    Object.entries(hrefs).forEach(([id, path]) => {
+      const link = document.getElementById(id);
+      if (!link) return;
+      const href = window.PaetzoldSite?.assetPath
+        ? window.PaetzoldSite.assetPath(path)
+        : `${isInSubdirectory ? '../' : './'}${path}`;
+      link.setAttribute('href', href);
+    });
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', run, { once: true });

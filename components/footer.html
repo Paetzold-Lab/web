@@ -11,7 +11,7 @@
 
   <div class="footer-text">
     <p>&copy; <span id="current-year"></span> Paetzold Lab. All rights reserved.
-       <a href="#" id="open-legal-notice" class="legal-link">Legal Notice</a>
+       <button type="button" id="open-legal-notice" class="legal-link">Legal Notice</button>
     </p>
   </div>
 
@@ -49,53 +49,34 @@
   </div>
 </footer>
 
-<style>
-.legal-link{color:#666;text-decoration:none;transition:color .2s;cursor:pointer}
-.legal-link:hover{color:#000;text-decoration:underline}
-.legal-popup{position:fixed;inset:0;z-index:9999;display:none}
-.legal-popup.active{display:block}
-.legal-popup-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(5px)}
-.legal-popup-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:800px;max-height:90vh;background:#fff;border-radius:10px;padding:30px;overflow-y:auto;box-shadow:0 5px 30px rgba(0,0,0,.3)}
-.legal-popup-close{position:absolute;top:15px;right:20px;font-size:28px;background:none;border:none;cursor:pointer;color:#666;transition:color .2s}
-.legal-popup-close:hover{color:#000}
-.legal-popup h2{font-size:24px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #eee}
-.legal-section{margin-bottom:20px}
-.legal-section h3{font-size:18px;margin-bottom:10px}
-.legal-section p{margin-bottom:8px;line-height:1.6;color:#333}
-.legal-section a{color:#0072ff;text-decoration:none}
-.legal-section a:hover{text-decoration:underline}
-.footer-text{text-align:center;margin-top:10px}
-@media(max-width:768px){.legal-popup-content{padding:20px}.legal-popup h2{font-size:20px}.legal-section h3{font-size:16px}}
-@media(max-width:480px){.legal-popup-content{padding:15px}.legal-popup h2{font-size:18px;margin-bottom:15px}.legal-section{margin-bottom:15px}}
-</style>
-
 <script>
 (()=>{
   const y=new Date().getFullYear();
   document.getElementById('current-year').textContent=y;
   document.querySelectorAll('.year-span').forEach(e=>e.textContent=y);
 
-  // Dynamic logo path adjustment so it works from subpages (e.g., team_members_subpage/*)
-  const isSub = window.location.pathname.includes('/team_members_subpage/');
-  const depthPrefix = isSub ? '../' : './';
   document.querySelectorAll('img.footer-logo[data-file]').forEach(img=>{
     const file = img.getAttribute('data-file');
     if (!file) return;
-    // Only set if not already correct
-    const desired = depthPrefix + 'images/logo/' + file;
+    const desired = window.PaetzoldSite?.assetPath
+      ? window.PaetzoldSite.assetPath('images/logo/' + file)
+      : './images/logo/' + file;
     if (img.getAttribute('src') !== desired) img.setAttribute('src', desired);
+    img.loading = 'lazy';
+    img.decoding = 'async';
   });
 
   // Legal notice popup logic
   const open=document.getElementById('open-legal-notice');
   const popup=document.getElementById('legal-notice-popup');
+  if (!open || !popup) return;
   const closeBtn=popup.querySelector('.legal-popup-close');
   const backdrop=popup.querySelector('.legal-popup-backdrop');
   const show=()=>{popup.classList.add('active');document.body.style.overflow='hidden'};
   const hide=()=>{popup.classList.remove('active');document.body.style.overflow=''};
   open.addEventListener('click',e=>{e.preventDefault();show()});
-  closeBtn.addEventListener('click',hide);
-  backdrop.addEventListener('click',hide);
+  closeBtn?.addEventListener('click',hide);
+  backdrop?.addEventListener('click',hide);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&popup.classList.contains('active'))hide()});
 })();
 </script>

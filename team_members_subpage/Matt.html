@@ -7,9 +7,9 @@
   <meta name="description" content="Paetzold Lab">
   <link rel="icon" type="image/png" href="../images/web_logo.png">
   <!-- Main CSS (reuse same style) -->
-  <link rel="stylesheet" href="../css/style.css" />
-  <script src="../js/components.js"></script>
-  <script src="../js/main.js"></script>
+  <link rel="stylesheet" href="../css/style.css?v=20260615l" />
+  <script src="../js/components.js?v=20260615l" defer></script>
+  <script src="../js/main.js?v=20260615l" defer></script>
 </head>
 <body>
   <!-- Component placeholders -->
@@ -19,7 +19,7 @@
   <main class="profile-page">
     <div class="profile-container">
       <div class="profile-image">
-        <img src="../images/portrait/Matt.jpeg" alt="Matt Li" />
+        <img src="../images/portrait/Matt.jpeg" alt="Matt Li" loading="eager" fetchpriority="high" decoding="async" />
       </div>
       <div class="profile-details">
         <h1>Matt Li</h1>
@@ -29,6 +29,10 @@
             <img src="../images/logo/Google_Scholar_logo.svg.png" alt="Google Scholar" class="profile-link-icon" />
             Google Scholar
           </a>
+          <a href="../research.html?member=Chenjun%20Li" class="profile-link publications" aria-label="View Chenjun Li publications">
+            <span class="profile-link-icon publications-icon" aria-hidden="true"></span>
+            Publications
+          </a>
           <!-- <a href="mailto:example@domain.com" class="profile-link email"><img src="../images/logo/email.png" alt="Email" class="profile-link-icon" />Email</a> -->
           <a href="https://www.linkedin.com/in/matt-l-79a921210/" class="profile-link linkedin" target="_blank" rel="noopener" aria-label="Matt LinkedIn (opens in new tab)">
             <span class="profile-link-icon linkedin-icon" aria-hidden="true"></span>
@@ -36,17 +40,7 @@
           </a>
         </div>
         
-        <div class="profile-bio">
-          <!-- <h2>Research Interests</h2>
-          <ul>
-
-          </ul>
-          
-          <h2>Education</h2>
-          <ul> -->
-
-          </ul>
-        </div>
+        <div class="profile-bio"></div>
       </div>
     </div>
   </main>

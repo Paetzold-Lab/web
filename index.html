@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Paetzold Lab">
   <link rel="icon" type="image/png" href="images/web_logo.png">
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/contact.css" />
-  <link rel="stylesheet" href="css/research_show.css" />
-  <script src="js/components.js" defer></script>
-  <script src="js/main.js" defer></script>
-  <script src="js/featured-publications.js" defer></script>
+  <link rel="stylesheet" href="css/style.css?v=20260615l" />
+  <link rel="stylesheet" href="css/contact.css?v=20260615l" />
+  <link rel="stylesheet" href="css/research_show.css?v=20260615l" />
+  <script src="js/components.js?v=20260615n" defer></script>
+  <script src="js/main.js?v=20260615l" defer></script>
+  <script src="js/featured-publications.js?v=20260615n" defer></script>
 </head>
 <body>
   <!-- Component placeholders -->
@@ -19,54 +19,15 @@
   <div id="search-overlay-placeholder"></div>
   <div id="legal-notice-overlay-placeholder"></div>
 
-  <!-- ========== HERO CAROUSEL (Large Video Slides) ========== -->
-  <section class="hero-carousel">
-    <div class="carousel-wrapper" id="carousel-wrapper">
-      <!-- Slide 1 -->
-      <div class="carousel-slide">
-        <div class="video-bg">
-          <video id="heroVideo" src="videos/medical_imaging.mp4" autoplay muted loop playsinline></video>
-        </div>
-        <div class="slide-content">
-          <h2>Medical Imaging</h2>
-          <a href="research.html" class="hero-btn">Explore our research</a>
-        </div>
-      </div>
-      <!-- Slide 2 -->
-      <div class="carousel-slide">
-        <div class="video-bg">
-          <video src="videos/GNN.mp4" autoplay muted loop playsinline></video>
-        </div>
-        <div class="slide-content">
-          <h2>Graph Neural Networks</h2>
-          <div class="hero-btn-container">
-            <a href="research.html" class="hero-btn">Explore our research</a>
-          </div>
-        </div>
-      </div>
-      <!-- Slide 3 -->
-      <div class="carousel-slide">
-        <div class="video-bg">
-          <video src="videos/GenAI.mp4" autoplay muted loop playsinline></video>
-        </div>
-        <div class="slide-content">
-          <h2>Gen AI</h2>
-          <div class="hero-btn-container">
-            <a href="research.html" class="hero-btn">Explore our research</a>
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- ========== HERO CAROUSEL (Featured Paper Slides) ========== -->
+  <section class="hero-carousel paper-hero" aria-label="Featured research">
+    <div class="carousel-wrapper" id="carousel-wrapper" aria-live="polite"></div>
 
     <!-- Carousel indicators -->
-    <div class="carousel-indicators" id="carousel-indicators">
-      <span class="dot active"></span>
-      <span class="dot"></span>
-      <span class="dot"></span>
-    </div>
+    <div class="carousel-indicators" id="carousel-indicators"></div>
     <!-- Carousel arrows -->
-    <button class="carousel-arrow left" id="carousel-prev"><span>&lt;</span></button>
-    <button class="carousel-arrow right" id="carousel-next"><span>&gt;</span></button>
+    <button class="carousel-arrow left" id="carousel-prev" aria-label="Previous slide"><span>&lt;</span></button>
+    <button class="carousel-arrow right" id="carousel-next" aria-label="Next slide"><span>&gt;</span></button>
   </section>
 
   <!-- Research Showcase Section -->
@@ -77,36 +38,7 @@
         We are developing machine learning methods that address key challenges in computer vision and healthcare. Situated in Manhattan, within the Department of Radiology at Weill Cornell Medicine and closely affiliated with Cornell Tech, we focus on interpretable medical image analysis, topological deep learning, graph neural networks and generative models. Our research integrates multimodal data—including clinical images, biological data, and patient histories to advance diverse applications in medical diagnosis, biology and neuroscience.
       </p>
     </div>
-    
-    <!-- <div class="research-grid">
-      <div class="research-item" data-speed="1.2">
-        <div class="research-item-bg">
-          <img src="images/research_show/medical_imaging.jpg" alt="Medical AI">
-        </div>
-        <div class="research-content">
-          <h3>Biomedical Image Analysis</h3>
-        </div>
-      </div>
-
-      <div class="research-item" data-speed="1.4">
-        <div class="research-item-bg">
-          <img src="images/research_show/gnn1.png" alt="GNN">
-        </div>
-        <div class="research-content">
-          <h3>Geometric Deep Learning</h3>
-        </div>
-      </div>
-
-      <div class="research-item" data-speed="1.1">
-        <div class="research-item-bg">
-          <img src="images/research_show/genAI.jpg" alt="Generative AI">
-        </div>
-        <div class="research-content">
-          <h3>Generative Models</h3>
-        </div>
-      </div>
-    </div>
-  </section> -->
+  </section>
 
   <!-- ========== Featured Publications Section ========== -->
   <section class="publications-showcase">
@@ -115,11 +47,11 @@
     </div> -->
     
     <div class="pub-featured-wrapper">
-      <button class="pub-scroll-btn left" id="pub-left">←</button>
+      <button class="pub-scroll-btn left" id="pub-left" aria-label="Previous featured publications">←</button>
       <div class="pub-featured">
         <!-- Publications will be dynamically inserted here -->
       </div>
-      <button class="pub-scroll-btn right" id="pub-right">→</button>
+      <button class="pub-scroll-btn right" id="pub-right" aria-label="Next featured publications">→</button>
     </div>
 
     <div class="button-container">
@@ -130,6 +62,7 @@
         </svg>
       </a>
     </div>
+  </section>
 
 <!-- ========== GALLERY CARDS ========== -->
 <section class="small-cards-row auto-scroll-gallery">
@@ -139,48 +72,61 @@
   <div class="gallery-overflow-container">
     <div class="cards-scroll-wrapper infinite-scroll">
       <!-- Original cards -->
+      <div class="small-card featured-group-photo">
+        <div class="small-card-image">
+          <img
+            src="images/team/paetzold-lab-group-2026.jpg"
+            srcset="images/team/paetzold-lab-group-2026.jpg 1200w, images/team/paetzold-lab-group-2026@2x.jpg 2400w"
+            sizes="(max-width: 768px) 80vw, 420px"
+            alt="Paetzold Lab group photo at Cornell Tech"
+            loading="lazy"
+            decoding="async" />
+        </div>
+        <div class="card-year">Paetzold Lab 2026</div>
+      </div>
       <div class="small-card">
-        <a class="small-card-image">
-          <img src="images/team/wacv_0.jpg" alt="Group photo" />
-        </a>
+        <div class="small-card-image">
+          <img src="images/team/wacv_0.jpg" alt="Group photo" loading="lazy" decoding="async" />
+        </div>
         <div class="card-year">WACV 2025</div>
       </div>
       <div class="small-card">
-        <a class="small-card-image">
-          <img src="images/team/wacv_1.jpeg" alt="Group photo" />
-        </a>
+        <div class="small-card-image">
+          <img src="images/team/wacv_1.jpeg" alt="Group photo" loading="lazy" decoding="async" />
+        </div>
         <div class="card-year">WACV 2025</div>
       </div>
       <div class="small-card">
-        <a class="small-card-image">
-          <img src="images/team/wacv_2.png" alt="Group photo" />
-        </a>
+        <div class="small-card-image">
+          <img src="images/team/wacv_2.png" alt="Group photo" loading="lazy" decoding="async" />
+        </div>
         <div class="card-year">WACV 2025</div>
       </div>
       <div class="small-card">
-        <a class="small-card-image">
-          <img src="images/team/2024_01.jpg" alt="Group photo" />
-        </a>
+        <div class="small-card-image">
+          <img src="images/team/2024_01.jpg" alt="Group photo" loading="lazy" decoding="async" />
+        </div>
         <div class="card-year">MICCAI 2024</div>
       </div>
       <div class="small-card">
-        <a class="small-card-image">
-          <img src="images/team/MICCAI.jpeg" alt="Group photo" />
-        </a>
+        <div class="small-card-image">
+          <img src="images/team/MICCAI.jpeg" alt="Group photo" loading="lazy" decoding="async" />
+        </div>
         <div class="card-year">MICCAI 2024</div>
       </div>
       <div class="small-card">
-        <a class="small-card-image">
-          <img src="images/team/campus.jpeg" alt="Group photo" />
-        </a>
+        <div class="small-card-image">
+          <img src="images/team/campus.jpeg" alt="Group photo" loading="lazy" decoding="async" />
+        </div>
         <div class="card-year">The Tech campus</div>
       </div>
       <div class="small-card">
-        <a class="small-card-image">
-          <img src="images/team/Cornell-Tech.jpg" alt="Cornell Tech" />
-        </a>
+        <div class="small-card-image">
+          <img src="images/team/Cornell-Tech.jpg" alt="Cornell Tech" loading="lazy" decoding="async" />
+        </div>
         <div class="card-year">The Tech campus</div>
       </div>
+    </div>
   </div>
 </section>
 
@@ -191,19 +137,19 @@
         <h1 class="typing-title">Send us a message</h1>
         <form class="contact-form" id="contact-form">
           <div class="form-group">
-            <input type="text" id="name" placeholder=" " required>
+            <input type="text" id="name" name="name" placeholder=" " required>
             <label for="name">Your Name</label>
             <span class="focus-border"></span>
           </div>
           
           <div class="form-group">
-            <input type="email" id="email" placeholder=" " required>
+            <input type="email" id="email" name="email" placeholder=" " required>
             <label for="email">Your Email</label>
             <span class="focus-border"></span>
           </div>
           
           <div class="form-group">
-            <textarea id="message" placeholder=" " required></textarea>
+            <textarea id="message" name="message" placeholder=" " required></textarea>
             <label for="message">Your Message</label>
             <span class="focus-border"></span>
           </div>
@@ -219,7 +165,7 @@
         <div class="map-container">
           <iframe 
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.29052440226!2d-73.95881038718849!3d40.75563443482199!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259ba857dd7a7%3A0xa9377b1a9772ce08!2sCornell%20Tech!5e0!3m2!1sen!2sus!4v1736203182370!5m2!1sen!2sus"
-            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            width="100%" height="100%" class="map-frame" allowfullscreen="" loading="lazy"></iframe>
         </div>
       </section>
     </div>
@@ -228,4 +174,3 @@
   <div id="footer-placeholder"></div>
 </body>
 </html>
-

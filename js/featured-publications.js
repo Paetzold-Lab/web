@@ -2,9 +2,11 @@
 const CATEGORY_NAMES = {
   "medical-imaging": "Medical Imaging",
   gnn: "GNN",
+  vlm: "VLM",
   generative: "Generative AI",
   topology: "Topology",
   microscopy: "Microscopy",
+  spectroscopy: "Spectroscopy",
   mri: "MRI",
   ct: "CT",
   pet: "PET",
@@ -22,8 +24,46 @@ const CATEGORY_NAMES = {
 // Will be populated from publications.json (data.categories) for single source of truth.
 let CATEGORY_MAP_FROM_DATA = {};
 
+const PI_NAME = "Johannes C. Paetzold";
+const HERO_PUBLICATION_IDS = [
+  "auto_482c89c131", // Adina Scheinfeld: LSFM foundation model
+  "auto_09034b913d", // Laurin Lux / Alexander Berger: MIDL
+  "auto_74ca8cdcb0", // Lucas Stoffl: VERITAS
+  "auto_82686f45e6", // Roel van Herten: GeoReg
+  "auto_ebdd832b58", // Chenjun Li: MELD
+  "auto_6295fd2b61"  // Chenjun/Laurin/Alex: medical VLM
+];
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615n";
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function escapeClassName(value) {
+  return String(value ?? "").trim().toLowerCase().replace(/[^a-z0-9_-]/g, "-");
+}
+
+function compareMemberNames(a, b) {
+  return String(a || "").localeCompare(String(b || ""), undefined, { sensitivity: "base" });
+}
+
+function normalizeLink(value) {
+  const link = String(value ?? "").trim();
+  return link || null;
+}
+
 async function json(path) {
-  const r = await fetch(path);
+  const url = window.PaetzoldSite?.assetPath
+    ? new URL(window.PaetzoldSite.assetPath(path), window.location.href)
+    : new URL(path, window.location.href);
+  url.searchParams.set("v", DATA_VERSION);
+  const r = await fetch(url.href);
   if (!r.ok) throw new Error(r.status);
   return r.json();
 }
@@ -31,7 +71,7 @@ async function json(path) {
 async function getFeaturedPublications() {
   const data = await json("./data/publications.json");
   if (data.categories) CATEGORY_MAP_FROM_DATA = data.categories;
-  const pubs = data.publications;
+  const pubs = data.publications || [];
   // 1. Explicit featured entries (preferred)
   const featured = pubs
     .filter(p => p.featured)
@@ -98,6 +138,206 @@ function catName(id) {
     .join(" ");
 }
 
+function visibleCategories(pub, limit = 2) {
+  const categories = pub.categories?.length ? pub.categories : ["other"];
+  const primary = pub.primary_category || categories[0];
+  const ordered = [primary, ...categories].filter(Boolean);
+  return ordered.filter((value, index, array) => array.indexOf(value) === index).slice(0, limit);
+}
+
+function displayMembers(pub, limit = 3) {
+  const members = (pub.source_members || []).filter(Boolean);
+  const nonPi = members.filter(member => member !== PI_NAME).sort(compareMemberNames);
+  const ordered = nonPi.length ? nonPi : [...members].sort(compareMemberNames);
+  const shown = ordered.slice(0, limit);
+  const hidden = Math.max(0, ordered.length - shown.length);
+  return { shown, hidden };
+}
+
+function truncate(value, limit) {
+  const text = String(value || "").replace(/\s+/g, " ").trim();
+  return text.length > limit ? `${text.slice(0, limit - 1).trim()}...` : text;
+}
+
+function formatVenue(value) {
+  const text = String(value || "").replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+  if (!text) return "";
+
+  const compactVenues = [
+    [/medical imaging with deep learning|MIDL/i, "Medical Imaging with Deep Learning (MIDL)"],
+    [/medical image computing and computer-assisted|MICCAI/i, "MICCAI"],
+    [/machine learning in medical imaging|MLMI/i, "MLMI"],
+    [/information processing in medical imaging|IPMI/i, "IPMI"],
+    [/computer vision and pattern recognition|CVPR/i, "CVPR"],
+    [/international conference on computer vision|ICCV/i, "ICCV"],
+    [/winter conference on applications of computer vision|WACV/i, "WACV"],
+    [/learning representations|ICLR/i, "ICLR"],
+    [/neural information processing systems|NeurIPS/i, "NeurIPS"],
+    [/international symposium on biomedical image processing|ISBI/i, "ISBI"]
+  ];
+
+  const match = compactVenues.find(([pattern]) => pattern.test(text));
+  return match ? match[1] : text;
+}
+
+function publicationSearchUrl(pub) {
+  return `research.html?q=${encodeURIComponent(pub.title || "")}`;
+}
+
+function publicationImage(pub) {
+  return normalizeLink(pub?.thumbnail) || "./images/publications/default.png";
+}
+
+function heroImageAttrs(slideIndex, imageIndex) {
+  if (slideIndex === 0) {
+    return imageIndex === 0
+      ? 'loading="eager" fetchpriority="high" decoding="async"'
+      : 'loading="eager" decoding="async"';
+  }
+  return 'loading="lazy" decoding="async"';
+}
+
+function selectHeroPublications(pubs) {
+  const byId = new Map(pubs.map(pub => [pub.id, pub]));
+  const selected = HERO_PUBLICATION_IDS
+    .map(id => byId.get(id))
+    .filter(Boolean);
+  const selectedIds = new Set(selected.map(pub => pub.id));
+  pubs.forEach(pub => {
+    if (selected.length < HERO_PUBLICATION_IDS.length && !selectedIds.has(pub.id)) {
+      selected.push(pub);
+      selectedIds.add(pub.id);
+    }
+  });
+  return selected.slice(0, HERO_PUBLICATION_IDS.length);
+}
+
+function heroCollageItems(heroPubs, index) {
+  const classes = ["primary", "secondary", "tertiary", "quaternary"];
+  return classes.map((className, offset) => {
+    const pub = heroPubs[(index + offset) % heroPubs.length];
+    return {
+      className,
+      src: publicationImage(pub),
+      title: pub?.title || "Featured research"
+    };
+  });
+}
+
+function ensurePaperZoomModal() {
+  let modal = document.getElementById("paper-zoom-modal");
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "paper-zoom-modal";
+    modal.className = "paper-zoom-modal";
+    modal.setAttribute("aria-hidden", "true");
+    modal.innerHTML = `
+      <button type="button" class="paper-zoom-backdrop" aria-label="Close preview"></button>
+      <div class="paper-zoom-dialog" role="dialog" aria-modal="true" aria-labelledby="paper-zoom-title">
+        <button type="button" class="paper-zoom-close" aria-label="Close preview">&times;</button>
+        <div class="paper-zoom-image-wrap">
+          <img src="./images/publications/default.png" alt="">
+        </div>
+        <p class="paper-zoom-caption" id="paper-zoom-title"></p>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+
+  if (!modal.dataset.bound) {
+    modal.querySelector(".paper-zoom-backdrop")?.addEventListener("click", closePaperZoom);
+    modal.querySelector(".paper-zoom-close")?.addEventListener("click", closePaperZoom);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) closePaperZoom();
+    });
+    modal.dataset.bound = "true";
+  }
+
+  return modal;
+}
+
+function openPaperZoom(src, title) {
+  const modal = ensurePaperZoomModal();
+  const img = modal.querySelector(".paper-zoom-image-wrap img");
+  const caption = modal.querySelector(".paper-zoom-caption");
+  modal.previousFocus = document.activeElement;
+  if (img) {
+    img.src = src || "./images/publications/default.png";
+    img.alt = title || "Featured research figure";
+  }
+  if (caption) caption.textContent = title || "";
+  modal.classList.add("is-open");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("paper-zoom-open");
+  modal.querySelector(".paper-zoom-close")?.focus();
+}
+
+function closePaperZoom() {
+  const modal = document.getElementById("paper-zoom-modal");
+  if (!modal) return;
+  modal.classList.remove("is-open");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("paper-zoom-open");
+  modal.previousFocus?.focus?.();
+}
+
+function bindPaperCollageZoom(scope = document) {
+  ensurePaperZoomModal();
+  if (scope.dataset?.collageZoomBound) return;
+  scope.addEventListener("click", event => {
+    const frame = event.target.closest?.(".paper-collage-frame");
+    if (!frame || !scope.contains(frame)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    openPaperZoom(frame.dataset.zoomSrc, frame.dataset.zoomTitle);
+  });
+  if (scope.dataset) scope.dataset.collageZoomBound = "true";
+}
+
+function renderHeroPublications(pubs) {
+  const wrap = document.getElementById("carousel-wrapper");
+  const indicators = document.getElementById("carousel-indicators");
+  if (!wrap || !indicators) return;
+
+  const heroPubs = selectHeroPublications(pubs);
+  if (!heroPubs.length) return;
+
+  wrap.innerHTML = heroPubs.map((pub, index) => {
+    const categories = visibleCategories(pub, 2);
+    const summary = truncate(pub.summary || pub.abstract || formatVenue(pub.venue), 160);
+    const venue = formatVenue(pub.venue);
+    const collageItems = heroCollageItems(heroPubs, index);
+    return `
+      <div class="carousel-slide paper-slide">
+        <div class="paper-bg">
+          <div class="paper-collage" aria-label="Featured research image collage">
+            ${collageItems.map((item, imageIndex) => `
+              <button type="button" class="paper-collage-frame ${item.className}" data-zoom-src="${escapeHTML(item.src)}" data-zoom-title="${escapeHTML(item.title)}" aria-label="Preview ${escapeHTML(item.title)}">
+                <img src="${escapeHTML(item.src)}" alt="${escapeHTML(item.title)}" ${heroImageAttrs(index, imageIndex)} onerror="this.onerror=null;this.src='./images/publications/default.png';">
+              </button>`).join("")}
+          </div>
+        </div>
+        <div class="slide-content paper-slide-content">
+          <div class="hero-paper-kicker">
+            <span>Featured research</span>
+            ${pub.year ? `<span>${escapeHTML(pub.year)}</span>` : ""}
+            ${categories.map(c => `<span>${escapeHTML(catName(c))}</span>`).join("")}
+          </div>
+          <h2>${escapeHTML(pub.title)}</h2>
+          ${summary ? `<p class="hero-paper-summary">${escapeHTML(summary)}</p>` : ""}
+          ${venue ? `<div class="hero-paper-venue" title="${escapeHTML(pub.venue || venue)}">${escapeHTML(venue)}</div>` : ""}
+          <a href="${escapeHTML(publicationSearchUrl(pub))}" class="hero-btn">View paper</a>
+        </div>
+      </div>`;
+  }).join("");
+
+  indicators.innerHTML = heroPubs
+    .map((_, index) => `<span class="dot ${index === 0 ? "active" : ""}" aria-label="Go to featured research ${index + 1}"></span>`)
+    .join("");
+
+  window.initializeCarousel?.();
+  bindPaperCollageZoom(wrap);
+}
+
 function scrollSetup(c, l, r) {
   if (!c || !l || !r) return;
   const dx = 400;
@@ -105,10 +345,15 @@ function scrollSetup(c, l, r) {
   r.addEventListener("click", () => c.scrollBy({ left: dx, behavior: "smooth" }));
 
   const sync = () => {
-    l.style.opacity = c.scrollLeft > 0 ? "1" : "0.5";
-    r.style.opacity = c.scrollLeft < c.scrollWidth - c.clientWidth - 10 ? "1" : "0.5";
+    const canScrollLeft = c.scrollLeft > 8;
+    const canScrollRight = c.scrollLeft < c.scrollWidth - c.clientWidth - 10;
+    l.disabled = !canScrollLeft;
+    r.disabled = !canScrollRight;
+    l.classList.toggle("is-disabled", !canScrollLeft);
+    r.classList.toggle("is-disabled", !canScrollRight);
   };
   c.addEventListener("scroll", sync);
+  c.scrollLeft = 0;
   sync();
 }
 
@@ -119,30 +364,47 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!wrap) return;
 
   wrap.textContent = "Loading publications...";
-  const pubs = await getFeaturedPublications();
+  let pubs = [];
+  try {
+    pubs = await getFeaturedPublications();
+  } catch {
+    wrap.textContent = "Unable to load publications.";
+    return;
+  }
   if (!pubs.length) {
     wrap.textContent = "No publications found.";
     return;
   }
 
+  renderHeroPublications(pubs);
+
   wrap.innerHTML = pubs
     .map(p => {
       const url =
-        p.url || p.scholar_link || p.links?.scholar || p.links?.pdf || "#";
+        normalizeLink(p.url || p.scholar_link || p.links?.scholar || p.links?.pdf) || "#";
+      const thumbnail = normalizeLink(p.thumbnail) || "./images/publications/default.png";
+      const members = displayMembers(p, 3);
+      const venue = formatVenue(p.venue);
       return `
         <article class="pub-card">
-          <a href="${url}" target="_blank" rel="noopener" class="pub-card-link">
-            <div class="pub-card-image">
-              <img src="${p.thumbnail || "./images/publications/default.png"}" alt="${p.title}" loading="lazy">
+          <a href="${escapeHTML(url)}" target="_blank" rel="noopener" class="pub-card-link">
+              <div class="pub-card-image">
+              <img src="${escapeHTML(thumbnail)}" alt="${escapeHTML(p.title)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='./images/publications/default.png';">
             </div>
             <div class="pub-card-content">
               <div class="pub-card-meta">
-                ${(p.categories?.slice(0, 5) || ["other"])
-                  .map(c => `<span class="pub-card-badge ${c}">${catName(c)}</span>`)
+                ${visibleCategories(p)
+                  .map(c => `<span class="pub-card-badge ${escapeClassName(c)}">${escapeHTML(catName(c))}</span>`)
                   .join("")}
-                <span class="pub-card-badge year">${p.year || ""}</span>
+                <span class="pub-card-badge year">${escapeHTML(p.year || "")}</span>
               </div>
-              <h3>${p.title}</h3>
+              <h3 title="${escapeHTML(p.title)}">${escapeHTML(p.title)}</h3>
+              ${venue ? `<p class="pub-card-venue" title="${escapeHTML(p.venue || venue)}">${escapeHTML(venue)}</p>` : ""}
+              <div class="pub-metrics">
+                ${p.citations ? `<span class="metric">${escapeHTML(p.citations)} citations</span>` : ""}
+                ${members.shown.map(m => `<span class="metric">${escapeHTML(m)}</span>`).join("")}
+                ${members.hidden ? `<span class="metric">+${members.hidden}</span>` : ""}
+              </div>
             </div>
           </a>
         </article>`;
@@ -151,28 +413,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   scrollSetup(wrap, left, right);
 
+  const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
   wrap.querySelectorAll(".pub-card").forEach((card, i) => {
+    if (reducedMotion) {
+      card.style.opacity = 1;
+      card.style.transform = "none";
+      return;
+    }
     card.style.opacity = 0;
     card.style.transform = "translateY(20px)";
     setTimeout(() => {
       card.style.transition = "opacity .5s ease,transform .5s ease";
       card.style.opacity = 1;
       card.style.transform = "translateY(0)";
-    }, i * 100);
+    }, i * 80);
   });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const s = document.createElement("style");
-  s.textContent = `
-    .pub-card{position:relative;cursor:pointer;min-width:350px;max-width:350px;height:550px;margin:0;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,.1)}
-    .pub-card-link{display:flex;flex-direction:column;color:inherit;height:100%}
-    .pub-card-image{height:220px;flex-shrink:0}
-    .pub-card-image img{height:100%;width:100%;object-fit:cover}
-    .pub-card-content{flex-grow:1;display:flex;flex-direction:column;position:relative;padding:1.5rem}
-    .pub-card h3{font-size:1.2rem;line-height:1.4;margin:.5rem 0 1rem}
-    .pub-card-badge{font-size:.9rem;padding:.4rem .8rem;margin:0 .3rem .3rem 0;display:inline-block}
-    .pub-metrics{position:absolute;bottom:20px;left:20px;margin:0}
-  `;
-  document.head.appendChild(s);
 });

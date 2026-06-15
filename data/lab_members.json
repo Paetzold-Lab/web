@@ -1,0 +1,69 @@
+{
+  "lab_name": "Paetzold Lab",
+  "categories": {
+    "mri": "MRI",
+    "ct": "CT",
+    "ultrasound": "Ultrasound",
+    "x-ray": "X-ray",
+    "pet": "PET",
+    "histology": "Histology",
+    "microscopy": "Microscopy",
+    "spectroscopy": "Spectroscopy",
+    "gnn": "GNN",
+    "generative": "Generative AI",
+    "vlm": "VLM",
+    "topology": "Topology",
+    "segmentation": "Segmentation",
+    "reconstruction": "Reconstruction",
+    "detection": "Detection",
+    "registration": "Registration",
+    "classification": "Classification",
+    "other": "Research"
+  },
+  "members": [
+    {
+      "name": "Johannes C. Paetzold",
+      "role": "Principal Investigator",
+      "scholar_id": "7Bv7PmgAAAAJ",
+      "aliases": ["Johannes Paetzold", "J Paetzold", "J C Paetzold", "JC Paetzold"]
+    },
+    {
+      "name": "Roel van Herten",
+      "role": "Postdoctoral Researcher",
+      "scholar_id": "CFNgI7QAAAAJ",
+      "aliases": ["Rudolf van Herten", "R van Herten", "R v Herten"]
+    },
+    {
+      "name": "Lucas Stoffl",
+      "role": "Postdoctoral Researcher",
+      "scholar_id": "phXULXIAAAAJ",
+      "aliases": ["L Stoffl"]
+    },
+    {
+      "name": "Chenjun Li",
+      "role": "PhD Student",
+      "scholar_id": "BFxNMooAAAAJ",
+      "min_year": 2024,
+      "exclude_title_patterns": ["visiopath"],
+      "aliases": ["Matt Li", "C Li", "C. Li"]
+    },
+    {
+      "name": "Adina Scheinfeld",
+      "role": "PhD Student",
+      "scholar_id": "UwFsb5QAAAAJ",
+      "aliases": ["A Scheinfeld"]
+    },
+    {
+      "name": "Laurin Lux",
+      "role": "PhD Student",
+      "scholar_id": "5OIAaZcAAAAJ",
+      "aliases": ["L Lux"]
+    },
+    {
+      "name": "Alexander Berger",
+      "role": "PhD Student",
+      "scholar_id": "-DTXAScAAAAJ",
+      "aliases": ["Alexander H. Berger", "A Berger", "A H Berger", "AH Berger"]
+    }
+  ]
+}

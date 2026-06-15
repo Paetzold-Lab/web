@@ -1,0 +1,18 @@
+{
+  "generated_at": "2026-06-15T17:43:03+00:00",
+  "summary": {
+    "total": 190,
+    "missing_year": 0,
+    "missing_venue": 0,
+    "missing_categories": 0,
+    "missing_source_members": 0,
+    "broken_thumbnails": 0,
+    "default_thumbnails": 0,
+    "openalex_matched": 123,
+    "openalex_unmatched": 33,
+    "chenjun_policy_violations": 0,
+    "duplicate_title_groups": 0
+  },
+  "issues": [],
+  "duplicate_groups": []
+}

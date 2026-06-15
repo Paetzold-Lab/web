@@ -1,32 +1,26 @@
 .contact-section {
-  background: linear-gradient(to bottom, #fff, #f8f8f8);
-  padding: 6rem 0;
+  background: var(--color-bg);
+  padding: 5rem 0;
   position: relative;
-  margin-top: 4rem;
+  margin-top: 2rem;
 }
 
 .contact-page {
   padding: 2rem;
-  padding-top: calc(71px + 2rem);
-  min-height: calc(100vh - 71px);
-  background: linear-gradient(to bottom, #fff, #f8f8f8);
+  padding-top: calc(var(--header-height) + 2rem);
+  min-height: calc(100dvh - var(--header-height));
+  background: var(--color-bg);
 }
 
 .contact-section::before {
-  content: '';
-  position: absolute;
-  top: -50px;
-  left: 0;
-  right: 0;
-  height: 50px;
-  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.03));
+  content: none;
 }
 
 .contact-container {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 3rem;
   padding: 0 2rem;
   min-height: 500px;
@@ -35,8 +29,9 @@
 .contact-form-section,
 .map-section {
   background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-small);
 }
 
 .contact-form-section {
@@ -48,21 +43,21 @@
 
 .typing-title {
   margin: 0;
-  font-family: monospace;
-  font-size: 2.5rem;
-  font-weight: bold;
+  font-family: var(--font-base);
+  font-size: 2rem;
+  font-weight: 700;
   margin-bottom: 2rem;
-  white-space: pre;
-  overflow: hidden;
-  width: calc(17ch + 8px);
-  border-right: 2px solid transparent;
-  height: 1.2em;
-  opacity: 0;
+  white-space: normal;
+  overflow: visible;
+  width: auto;
+  border-right: 0;
+  height: auto;
+  opacity: 1;
 }
 
 .typing-title.animate {
   opacity: 1;
-  animation: typing 2s steps(17), blink-caret 0.75s step-end infinite;
+  animation: none;
 }
 
 .contact-form {
@@ -90,13 +85,13 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: #eee;
+  background: var(--color-border);
   transition: background 0.3s ease;
 }
 
 .form-group input:focus ~ .focus-border,
 .form-group textarea:focus ~ .focus-border {
-  background: #000;
+  background: var(--color-accent);
 }
 
 .form-group label {
@@ -115,7 +110,7 @@
 .form-group textarea:not(:placeholder-shown) ~ label {
   top: -1.2rem;
   font-size: 0.8rem;
-  color: #000;
+  color: var(--color-accent);
 }
 
 .form-group textarea {
@@ -126,10 +121,10 @@
 .submit-btn {
   position: relative;
   padding: 0.8rem 2rem;
-  background: #000;
+  background: var(--color-primary);
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius-md);
   font-size: 1rem;
   cursor: pointer;
   overflow: hidden;
@@ -138,6 +133,7 @@
 
 .submit-btn:hover {
   transform: translateY(-2px);
+  background: var(--color-accent);
 }
 
 .btn-hover {
@@ -156,26 +152,45 @@
 }
 
 .submit-btn.success {
-  background-color: #4CAF50 !important;
+  background-color: #111 !important;
   color: white !important;
   transition: background-color 0.3s ease;
 }
 
 .submit-btn.success:hover {
-  background-color: #45a049 !important;
+  background-color: #333 !important;
 }
 
 .map-section {
   width: 100%;
   min-height: 400px;
+  position: relative;
+  overflow: hidden;
+  background: #f7f7f7;
+}
+
+.map-section::after {
+  content: "Cornell Tech, New York";
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 1;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  pointer-events: none;
 }
 
 .map-container {
   width: 100%;
   height: 100%;
-  border-radius: 15px;
+  border-radius: var(--border-radius-lg);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: none;
 }
 
 .map-container iframe {
@@ -204,11 +219,11 @@
 
 @media (max-width: 568px) {
   .contact-section { padding: 3rem 0; }
-  .typing-title { font-size: 1.5rem !important; width: calc(17ch + 4px); }
+  .contact-page { padding: calc(var(--header-height) + 1.25rem) 0 1.5rem; }
+  .typing-title { font-size: 1.5rem !important; width: auto; }
   .contact-container { grid-template-columns: 1fr; min-height: auto; gap: 1.5rem; padding: 0 1rem; }
   .contact-form-section { padding: 1.5rem; min-height: 400px; }
   .map-section { height: 200px; }
   .form-group { margin-bottom: 1.5rem; }
   .submit-btn { width: 100%; }
 }
-
