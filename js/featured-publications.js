@@ -76,7 +76,16 @@ const HERO_IMAGE_SETS = {
   ]
 };
 
-const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615r";
+const HERO_TEASERS = {
+  auto_482c89c131: "Few labels, many light-sheet microscopy tasks.",
+  auto_09034b913d: "Calibrated segmentation without sacrificing accuracy.",
+  auto_74ca8cdcb0: "Auditable agents test image-derived clinical hypotheses.",
+  auto_82686f45e6: "Direct DSA-to-CTA registration for stroke workflows.",
+  auto_ebdd832b58: "Robust AI-text detection across attacks and domains.",
+  auto_6295fd2b61: "Synthetic OCTA data teaches VLMs clinical reasoning."
+};
+
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615s";
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -223,6 +232,12 @@ function formatVenue(value) {
   return match ? match[1] : text;
 }
 
+function heroTeaser(pub) {
+  const teaser = HERO_TEASERS[pub?.id];
+  if (teaser) return teaser;
+  return truncate(pub?.summary || pub?.abstract || "", 88);
+}
+
 function publicationSearchUrl(pub) {
   return `research.html?q=${encodeURIComponent(pub.title || "")}`;
 }
@@ -353,7 +368,7 @@ function renderHeroPublications(pubs) {
 
   wrap.innerHTML = heroPubs.map((pub, index) => {
     const categories = visibleCategories(pub, 2);
-    const summary = truncate(pub.summary || pub.abstract || formatVenue(pub.venue), 160);
+    const summary = heroTeaser(pub);
     const venue = formatVenue(pub.venue);
     const collageItems = heroCollageItems(pub);
     return `
