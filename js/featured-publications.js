@@ -83,7 +83,7 @@ const HERO_TEASERS = {
   auto_6295fd2b61: "Synthetic OCTA data teaches VLMs clinical reasoning."
 };
 
-const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615t";
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615u";
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -278,11 +278,14 @@ function heroCollageItems(pub) {
     .filter((item, index, array) => array.findIndex(other => normalizeLink(other.src) === normalizeLink(item.src)) === index)
     .slice(0, classes.length);
   return uniqueItems.map((item, offset) => {
+    const figureLabel = item.label || pub?.title || "Featured research figure";
+    const fullLabel = item.label ? `${pub?.title || "Featured research"} - ${item.label}` : figureLabel;
     return {
       className: classes[offset],
       src: normalizeLink(item.src) || publicationImage(pub),
       position: item.position || "center",
-      title: item.label ? `${pub?.title || "Featured research"} - ${item.label}` : pub?.title || "Featured research"
+      title: figureLabel,
+      ariaLabel: fullLabel
     };
   });
 }
@@ -374,8 +377,8 @@ function renderHeroPublications(pubs) {
         <div class="paper-bg">
           <div class="paper-collage" data-paper-id="${escapeHTML(pub.id || "")}" data-image-count="${collageItems.length}" aria-label="Featured research image collage for ${escapeHTML(pub.title || "paper")}">
             ${collageItems.map((item, imageIndex) => `
-              <button type="button" class="paper-collage-frame ${item.className}" style="--paper-image:url('${escapeHTML(item.src)}');--paper-image-position:${escapeHTML(item.position)}" data-zoom-src="${escapeHTML(item.src)}" data-zoom-title="${escapeHTML(item.title)}" aria-label="Preview ${escapeHTML(item.title)}">
-                <img src="${escapeHTML(item.src)}" alt="${escapeHTML(item.title)}" ${heroImageAttrs(index, imageIndex)} onerror="this.onerror=null;this.src='./images/publications/default.png';">
+              <button type="button" class="paper-collage-frame ${item.className}" style="--paper-image:url('${escapeHTML(item.src)}');--paper-image-position:${escapeHTML(item.position)}" data-zoom-src="${escapeHTML(item.src)}" data-zoom-title="${escapeHTML(item.title)}" aria-label="Preview ${escapeHTML(item.ariaLabel)}">
+                <img src="${escapeHTML(item.src)}" alt="${escapeHTML(item.ariaLabel)}" ${heroImageAttrs(index, imageIndex)} onerror="this.onerror=null;this.src='./images/publications/default.png';">
               </button>`).join("")}
           </div>
         </div>

@@ -690,6 +690,7 @@ img {
   top: 50%;
   width: min(92vw, 1040px);
   height: min(84vh, 740px);
+  max-height: calc(100vh - 2rem);
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   overflow: hidden;
@@ -700,6 +701,13 @@ img {
   opacity: 0;
   transform: translate(-50%, -48%) scale(0.96);
   transition: opacity 0.32s ease, transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@supports (height: 100svh) {
+  .paper-zoom-dialog {
+    height: min(84svh, 740px);
+    max-height: calc(100svh - 2rem);
+  }
 }
 
 .paper-zoom-modal.is-open .paper-zoom-dialog {
@@ -2023,9 +2031,46 @@ img {
   .paper-collage-frame.primary:focus-visible {
     transform: translateY(-4px) scale(1.035);
   }
+  .paper-zoom-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:
+      max(0.9rem, env(safe-area-inset-top))
+      max(0.9rem, env(safe-area-inset-right))
+      max(0.9rem, env(safe-area-inset-bottom))
+      max(0.9rem, env(safe-area-inset-left));
+  }
   .paper-zoom-dialog {
+    position: relative;
+    left: auto;
+    top: auto;
     width: min(94vw, 720px);
-    height: min(78vh, 680px);
+    height: min(76vh, 680px);
+    max-height: calc(100vh - 1.8rem);
+    transform: translateY(12px) scale(0.96);
+  }
+  @supports (height: 100svh) {
+    .paper-zoom-dialog {
+      height: min(76svh, 680px);
+      max-height: calc(100svh - 1.8rem);
+    }
+  }
+  .paper-zoom-modal.is-open .paper-zoom-dialog {
+    transform: translateY(0) scale(1);
+  }
+  .paper-zoom-caption {
+    display: block;
+    max-height: min(7.5rem, 24vh);
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  @supports (height: 100svh) {
+    .paper-zoom-caption {
+      max-height: min(7.5rem, 24svh);
+    }
   }
   .paper-hero .carousel-slide::after {
     background:
@@ -2173,7 +2218,14 @@ img {
     display: none;
   }
   .paper-zoom-dialog {
-    height: min(74vh, 640px);
+    height: min(70vh, 620px);
+    max-height: calc(100vh - 1.6rem);
+  }
+  @supports (height: 100svh) {
+    .paper-zoom-dialog {
+      height: min(70svh, 620px);
+      max-height: calc(100svh - 1.6rem);
+    }
   }
   .paper-zoom-image-wrap {
     padding: 0.65rem;
