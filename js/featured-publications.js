@@ -37,8 +37,7 @@ const HERO_PUBLICATION_IDS = [
 const HERO_IMAGE_SETS = {
   auto_482c89c131: [
     { src: "./images/publications/hero/auto_482c89c131-primary.jpg", label: "Light-sheet microscopy task examples" },
-    { src: "./images/publications/hero/auto_482c89c131-results.jpg", label: "Few-shot task performance" },
-    { src: "./images/publications/hero/auto_482c89c131-finetune.jpg", label: "Finetuning examples" }
+    { src: "./images/publications/hero/auto_482c89c131-results.jpg", label: "Few-shot task performance" }
   ],
   auto_09034b913d: [
     { src: "./images/publications/hero/auto_09034b913d-primary.jpg", label: "Gradient surgery visual analysis" },
@@ -46,7 +45,6 @@ const HERO_IMAGE_SETS = {
   ],
   auto_74ca8cdcb0: [
     { src: "./images/publications/hero/auto_74ca8cdcb0-primary.jpg", label: "VERITAS architecture and evidence flow" },
-    { src: "./images/publications/hero/auto_74ca8cdcb0-phases.jpg", label: "Analysis phases" },
     { src: "./images/publications/hero/auto_74ca8cdcb0-provenance.jpg", label: "Artifact provenance graph" }
   ],
   auto_82686f45e6: [
@@ -85,7 +83,7 @@ const HERO_TEASERS = {
   auto_6295fd2b61: "Synthetic OCTA data teaches VLMs clinical reasoning."
 };
 
-const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615s";
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615t";
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({

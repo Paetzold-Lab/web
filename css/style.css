@@ -981,6 +981,20 @@ img {
   right: 1.2rem;
 }
 
+.paper-hero .carousel-arrow.left,
+.paper-hero .carousel-arrow.right {
+  left: auto;
+  right: 1.2rem;
+}
+
+.paper-hero .carousel-arrow.left {
+  top: calc(50% - 28px);
+}
+
+.paper-hero .carousel-arrow.right {
+  top: calc(50% + 28px);
+}
+
 .carousel-arrow > span {
   display: inline-block;
   transform: translateY(-2px);
@@ -1976,18 +1990,23 @@ img {
   }
   .slide-content h2 { font-size: 3.2rem; }
   .slide-content p { font-size: 0.9rem; }
-  .paper-hero { min-height: 560px; }
+  .paper-hero {
+    height: 620px;
+    min-height: 620px;
+    max-height: none;
+  }
   .paper-bg {
     align-items: flex-start;
     justify-content: center;
-    padding: 1.2rem 1rem 18.5rem;
-    background:
-      linear-gradient(180deg, #f6f6f6 0%, #f6f6f6 43%, #0f0f0f 43%, #0f0f0f 100%);
+    bottom: auto;
+    height: 260px;
+    padding: 0.85rem 1rem 0.75rem;
+    background: #f6f6f6;
   }
   .paper-collage {
     width: min(100%, 500px);
-    height: 262px;
-    min-height: 262px;
+    height: 100%;
+    min-height: 0;
   }
   .paper-collage::before {
     inset: 8% 3% 8% 8%;
@@ -2010,13 +2029,13 @@ img {
   }
   .paper-hero .carousel-slide::after {
     background:
-      linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.06) 35%, rgba(0, 0, 0, 0.76) 62%, rgba(0, 0, 0, 0.9) 100%);
+      linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.02) 41%, rgba(0, 0, 0, 0.9) 42%, #0f0f0f 100%);
   }
   .paper-slide-content {
-    top: auto;
+    top: 286px;
     left: 1rem;
     right: 1rem;
-    bottom: 4.1rem;
+    bottom: auto;
     transform: none;
     max-width: none;
   }
@@ -2103,11 +2122,17 @@ img {
   .carousel-slide { height: 100%; }
   .slide-content { bottom: 3.8rem; }
   .slide-content h2 { font-size: 2.45rem; }
-  .paper-hero { height: 64vh; min-height: 560px; }
-  .paper-bg { padding: 1rem 0.85rem 19rem; }
+  .paper-hero {
+    height: 610px;
+    min-height: 610px;
+  }
+  .paper-bg {
+    height: 228px;
+    padding: 0.75rem 0.75rem 0.65rem;
+  }
   .paper-collage {
-    height: 236px;
-    min-height: 236px;
+    height: 100%;
+    min-height: 0;
     gap: 0.45rem;
     padding: 0.5rem;
   }
@@ -2135,8 +2160,8 @@ img {
     width: auto;
     height: auto;
   }
-  .paper-slide-content { bottom: 3.55rem; }
-  .paper-slide-content h2 { font-size: 1.82rem; }
+  .paper-slide-content { top: 249px; }
+  .paper-slide-content h2 { font-size: 1.72rem; }
   .hero-paper-kicker { gap: 0.32rem; margin-bottom: 0.65rem; }
   .hero-paper-kicker span,
   .hero-paper-member {

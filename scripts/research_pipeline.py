@@ -207,7 +207,7 @@ MANUAL_METADATA_OVERRIDES: Dict[str, Dict[str, Any]] = {
     "auto_ebdd832b58": {
         "url": "https://arxiv.org/abs/2605.06903",
         "pdf_link": "https://arxiv.org/pdf/2605.06903",
-        "thumbnail": "images/publications/manual_added/meld_overview_2026.jpg",
+        "thumbnail": "images/publications/hero/auto_ebdd832b58-primary.jpg",
         "thumbnail_source": "manual-crop",
         "llm_tags": [
             "AI-generated text detection",
@@ -226,7 +226,7 @@ MANUAL_METADATA_OVERRIDES: Dict[str, Dict[str, Any]] = {
         "venue": "MICCAI 2026 (early accepted), arXiv preprint",
         "url": "https://arxiv.org/abs/2605.26026",
         "pdf_link": "https://arxiv.org/pdf/2605.26026",
-        "thumbnail": "images/publications/manual_added/lsfm_miccai_2026.jpg",
+        "thumbnail": "images/publications/hero/auto_482c89c131-primary.jpg",
         "thumbnail_source": "manual-crop",
         "llm_tags": [
             "3D foundation model",
