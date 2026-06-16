@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://paetzold-lab.github.io/web/</loc>
+    <loc>https://paetzold-lab.github.io/</loc>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://paetzold-lab.github.io/web/research.html</loc>
+    <loc>https://paetzold-lab.github.io/research.html</loc>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://paetzold-lab.github.io/web/team.html</loc>
+    <loc>https://paetzold-lab.github.io/team.html</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://paetzold-lab.github.io/web/join_us.html</loc>
+    <loc>https://paetzold-lab.github.io/join_us.html</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://paetzold-lab.github.io/web/contact.html</loc>
+    <loc>https://paetzold-lab.github.io/contact.html</loc>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://paetzold-lab.github.io/web/pi.html</loc>
+    <loc>https://paetzold-lab.github.io/pi.html</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://paetzold-lab.github.io/web/team_members_subpage/Adina.html</loc>
+    <loc>https://paetzold-lab.github.io/team_members_subpage/Adina.html</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://paetzold-lab.github.io/web/team_members_subpage/Laurin.html</loc>
+    <loc>https://paetzold-lab.github.io/team_members_subpage/Laurin.html</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://paetzold-lab.github.io/web/team_members_subpage/Lucas.html</loc>
+    <loc>https://paetzold-lab.github.io/team_members_subpage/Lucas.html</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://paetzold-lab.github.io/web/team_members_subpage/Matt.html</loc>
+    <loc>https://paetzold-lab.github.io/team_members_subpage/Matt.html</loc>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://paetzold-lab.github.io/web/team_members_subpage/Roel.html</loc>
+    <loc>https://paetzold-lab.github.io/team_members_subpage/Roel.html</loc>
     <priority>0.6</priority>
   </url>
 </urlset>

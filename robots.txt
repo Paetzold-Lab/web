@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://paetzold-lab.github.io/web/sitemap.xml
+Sitemap: https://paetzold-lab.github.io/sitemap.xml
