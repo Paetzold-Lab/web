@@ -319,6 +319,8 @@ MANUAL_METADATA_OVERRIDES: Dict[str, Dict[str, Any]] = {
         "venue": "Medical Imaging with Deep Learning (MIDL)",
         "url": "https://proceedings.mlr.press/v315/herten26a.html",
         "pdf_link": "https://raw.githubusercontent.com/mlresearch/v315/main/assets/herten26a/herten26a.pdf",
+        "thumbnail": "images/publications/hero/auto_82686f45e6-method.jpg",
+        "thumbnail_source": "manual-pdf-crop",
         "abstract": (
             "GeoReg directly registers biplanar digital subtraction angiography to pre-procedural CTA for acute ischemic stroke. "
             "The method avoids vessel-specific segmentation by aligning maximum intensity projections from DSA with differentiable "
