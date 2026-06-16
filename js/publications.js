@@ -20,7 +20,7 @@ const LAB_MEMBER_ALIASES = {
   "Roel van Herten": ["Rudolf van Herten", "R van Herten", "R. van Herten", "R v Herten", "RLM van Herten"],
   "Lucas Stoffl": ["L Stoffl"]
 };
-const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615x";
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260616a";
 
 function siteAssetPath(path) {
   if (window.PaetzoldSite?.assetPath) return window.PaetzoldSite.assetPath(path);
@@ -57,6 +57,12 @@ function normalizeLink(value) {
 function doiURL(value) {
   const doi = String(value ?? "").trim().replace(/^https?:\/\/(dx\.)?doi\.org\//i, "");
   return doi ? `https://doi.org/${doi}` : null;
+}
+
+function updateSortDirectionControl(button) {
+  if (!button) return;
+  button.textContent = sortConfig.ascending ? "↑" : "↓";
+  button.setAttribute("aria-label", sortConfig.ascending ? "Sort ascending" : "Sort descending");
 }
 
 const LAB_ALIAS_SET = new Set([
@@ -121,9 +127,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const sortDir = document.getElementById("sort-direction");
 
   container && (container.innerHTML = '<div class="loading">Loading publications...</div>');
-    publications = await fetchPublications();
-    updateMemberButtons(publications);
-    updatePublicationMeta();
+  publications = await fetchPublications();
+  updateMemberButtons(publications);
+  updatePublicationMeta();
 
   const params = new URLSearchParams(window.location.search);
   const param = params.get("filter");
@@ -158,8 +164,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   pages?.addEventListener("click", e => {
-    if (e.target.tagName === "SPAN" && e.target.dataset.page) {
-      currentPage = +e.target.dataset.page;
+    const pageButton = e.target.closest("[data-page]");
+    if (pageButton) {
+      currentPage = +pageButton.dataset.page;
       applyFiltersAndRender();
       window.scrollTo({ top: document.querySelector(".publications").offsetTop - 100, behavior: "smooth" });
     }
@@ -185,17 +192,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   sortSel?.addEventListener("change", () => {
     sortConfig.field = sortSel.value;
     sortConfig.ascending = sortConfig.field === "priority" || sortConfig.field === "title";
-    if (sortDir) sortDir.textContent = sortConfig.ascending ? "↑" : "↓";
+    updateSortDirectionControl(sortDir);
     currentPage = 1;
     applyFiltersAndRender();
   });
 
   sortDir?.addEventListener("click", () => {
     sortConfig.ascending = !sortConfig.ascending;
-    sortDir.textContent = sortConfig.ascending ? "↑" : "↓";
+    updateSortDirectionControl(sortDir);
     currentPage = 1;
     applyFiltersAndRender();
   });
+
+  updateSortDirectionControl(sortDir);
 });
 
 function attachFilterListeners() {
@@ -522,16 +531,16 @@ function updatePagination(total) {
 
   let html = "";
   if (s > 1) {
-    html += `<span data-page="1">1</span>`;
+    html += `<button type="button" data-page="1" aria-label="Go to page 1">1</button>`;
     if (s > 2) html += `<span class="ellipsis">...</span>`;
   }
 
   for (let i = s; i <= e; i++)
-    html += `<span class="${i === currentPage ? "active" : ""}" data-page="${i}">${i}</span>`;
+    html += `<button type="button" class="${i === currentPage ? "active" : ""}" data-page="${i}" aria-label="Go to page ${i}" ${i === currentPage ? 'aria-current="page"' : ""}>${i}</button>`;
 
   if (e < totalPages) {
     if (e < totalPages - 1) html += `<span class="ellipsis">...</span>`;
-    html += `<span data-page="${totalPages}">${totalPages}</span>`;
+    html += `<button type="button" data-page="${totalPages}" aria-label="Go to page ${totalPages}">${totalPages}</button>`;
   }
 
   pages.innerHTML = html;

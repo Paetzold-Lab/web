@@ -271,24 +271,37 @@ img {
   height: 100%;
   z-index: 2000;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity var(--transition-fast);
+  transition: opacity var(--transition-fast), visibility 0s linear var(--transition-fast);
   overflow-y: auto;
 }
 
 .overlay.active {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
+  transition-delay: 0s;
+}
+
+body.overlay-open {
+  overflow: hidden;
 }
 
 .blur-bg {
   position: absolute;
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  -webkit-appearance: none;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(0px);
   opacity: 0;
   transition: opacity var(--transition-medium), backdrop-filter var(--transition-medium);
+  cursor: pointer;
 }
 
 .overlay.active .blur-bg {
@@ -388,6 +401,8 @@ img {
   border-radius: var(--border-radius-md);
   color: white;
   cursor: pointer;
+  display: block;
+  text-decoration: none;
   transition: transform var(--transition-fast), background var(--transition-fast);
 }
 
@@ -427,6 +442,13 @@ img {
 
 .overlay-close:hover {
   color: #fff;
+}
+
+.overlay-close:focus-visible,
+.search-result-item:focus-visible,
+.blur-bg:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
 }
 
 /* Hero Carousel */
@@ -663,7 +685,7 @@ img {
 .paper-zoom-modal {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 2100;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.28s ease;
@@ -679,6 +701,11 @@ img {
   inset: 0;
   width: 100%;
   height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  -webkit-appearance: none;
   background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -713,6 +740,21 @@ img {
 .paper-zoom-modal.is-open .paper-zoom-dialog {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
+}
+
+.paper-zoom-dialog.is-wide {
+  height: auto;
+  grid-template-rows: auto auto;
+}
+
+.paper-zoom-dialog.is-wide .paper-zoom-image-wrap {
+  max-height: min(68vh, 620px);
+}
+
+.paper-zoom-dialog.is-wide .paper-zoom-close {
+  top: auto;
+  right: 0.8rem;
+  bottom: 0.65rem;
 }
 
 .paper-zoom-image-wrap {
@@ -2059,6 +2101,28 @@ img {
   .paper-zoom-modal.is-open .paper-zoom-dialog {
     transform: translateY(0) scale(1);
   }
+  .paper-zoom-dialog.is-wide {
+    height: auto;
+    max-height: calc(100vh - 1.8rem);
+  }
+  @supports (height: 100svh) {
+    .paper-zoom-dialog.is-wide {
+      max-height: calc(100svh - 1.8rem);
+    }
+  }
+  .paper-zoom-dialog.is-wide .paper-zoom-image-wrap {
+    max-height: min(58vh, 520px);
+  }
+  .paper-zoom-dialog.is-wide .paper-zoom-close {
+    top: auto;
+    right: 0.55rem;
+    bottom: 0.6rem;
+  }
+  @supports (height: 100svh) {
+    .paper-zoom-dialog.is-wide .paper-zoom-image-wrap {
+      max-height: min(58svh, 520px);
+    }
+  }
   .paper-zoom-caption {
     display: block;
     max-height: min(7.5rem, 24vh);
@@ -2221,9 +2285,17 @@ img {
     height: min(70vh, 620px);
     max-height: calc(100vh - 1.6rem);
   }
+  .paper-zoom-dialog.is-wide {
+    height: auto;
+    max-height: calc(100vh - 1.6rem);
+  }
   @supports (height: 100svh) {
     .paper-zoom-dialog {
       height: min(70svh, 620px);
+      max-height: calc(100svh - 1.6rem);
+    }
+    .paper-zoom-dialog.is-wide {
+      height: auto;
       max-height: calc(100svh - 1.6rem);
     }
   }

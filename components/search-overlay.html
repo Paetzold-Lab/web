@@ -1,10 +1,10 @@
-<div id="search-overlay" class="overlay">
-    <div class="blur-bg"></div>
+<div id="search-overlay" class="overlay" role="dialog" aria-modal="true" aria-label="Search site" aria-hidden="true">
+    <button type="button" class="blur-bg" aria-label="Close search"></button>
     <div class="search-content">
       <div class="search-container">
-        <input type="text" class="search-input" placeholder="Search...">
-        <div class="search-results"></div>
+        <input type="text" class="search-input" placeholder="Search..." aria-label="Search site">
+        <div class="search-results" aria-live="polite"></div>
       </div>
-      <button class="overlay-close">&times;</button>
+      <button type="button" class="overlay-close" aria-label="Close search">&times;</button>
     </div>
   </div>

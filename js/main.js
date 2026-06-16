@@ -27,6 +27,13 @@ function siteAssetPath(path) {
   return `${isSubpage ? "../" : "./"}${String(path || "").replace(/^\.?\//, "")}`;
 }
 
+function versionedSiteAssetURL(path) {
+  const url = new URL(siteAssetPath(path), window.location.href);
+  const version = window.PaetzoldSite?.componentVersion;
+  if (version) url.searchParams.set("v", version);
+  return url.href;
+}
+
 function isReducedMotion() {
   return window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 }
@@ -83,16 +90,36 @@ function initializeHeader() {
     ?.addEventListener("click", () => {
       const o = document.getElementById("search-overlay");
       if (!o) return;
-      o.classList.add("active");
+      openOverlay(o);
       document.dispatchEvent(new CustomEvent("search-overlay-open"));
       setTimeout(() => document.querySelector(".search-input")?.focus(), 300);
     });
 }
 
+function openOverlay(overlay) {
+  overlay.previousFocus = document.activeElement;
+  overlay.classList.add("active");
+  overlay.setAttribute("aria-hidden", "false");
+  document.body.classList.add("overlay-open");
+}
+
+function closeOverlay(overlay) {
+  if (!overlay) return;
+  overlay.classList.remove("active");
+  overlay.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("overlay-open");
+  overlay.previousFocus?.focus?.();
+}
+
 function initializeUI() {
   document.addEventListener("click", e => {
-    if (e.target.matches(".overlay-close"))
-      e.target.closest(".overlay")?.classList.remove("active");
+    if (e.target.matches(".overlay-close, .blur-bg")) closeOverlay(e.target.closest(".overlay"));
+  });
+
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    const activeOverlay = document.querySelector(".overlay.active");
+    if (activeOverlay) closeOverlay(activeOverlay);
   });
 
   if (!("IntersectionObserver" in window) || isReducedMotion()) {
@@ -168,10 +195,10 @@ function initializeSearch() {
         }
 
         return `
-          <div class="search-result-item" data-url="${escapeHTML(p.url)}">
+          <a class="search-result-item" href="${escapeHTML(p.url)}" data-url="${escapeHTML(p.url)}">
             <h3>${highlightTerm(p.title, rawQuery)}</h3>
             <p>${highlightTerm(snippet, rawQuery)}</p>
-          </div>`;
+          </a>`;
       })
       .join("");
   };
@@ -185,7 +212,7 @@ function initializeSearch() {
 
   results.addEventListener("click", e => {
     const item = e.target.closest(".search-result-item");
-    if (item?.dataset.url) window.location.href = item.dataset.url;
+    if (item?.dataset.url && item.tagName !== "A") window.location.href = item.dataset.url;
   });
 }
 
@@ -203,7 +230,7 @@ async function buildSearchIndex() {
     await Promise.all(
       SEARCH_PAGES.map(async page => {
         try {
-          const r = await fetch(siteAssetPath(page));
+          const r = await fetch(versionedSiteAssetURL(page));
           if (!r.ok) return null;
           const html = await r.text();
           const doc = new DOMParser().parseFromString(html, "text/html");
@@ -221,7 +248,7 @@ async function buildSearchIndex() {
 
   let publicationIndex = [];
   try {
-    const r = await fetch(siteAssetPath("data/publications.json"));
+    const r = await fetch(versionedSiteAssetURL("data/publications.json"));
     if (r.ok) {
       const data = await r.json();
       publicationIndex = (data.publications || []).map(p => normalizeSearchEntry({
@@ -276,6 +303,11 @@ function initializeCarousel() {
   const update = () => {
     idx = (idx + slides.length) % slides.length;
     wrap.style.transform = `translateX(-${idx * 100}%)`;
+    slides.forEach((slide, i) => {
+      const active = i === idx;
+      slide.classList.toggle("active", active);
+      slide.setAttribute("aria-hidden", active ? "false" : "true");
+    });
     dots.forEach((d, i) => {
       const active = i === idx;
       d.classList.toggle("active", active);
@@ -284,6 +316,7 @@ function initializeCarousel() {
   };
 
   const startTimer = () => {
+    if (wrap.carouselTimer) clearInterval(wrap.carouselTimer);
     if (slides.length <= 1 || isReducedMotion() || document.hidden) return;
     wrap.carouselTimer = setInterval(() => ((idx = idx + 1), update()), 8e3);
   };
@@ -350,6 +383,14 @@ function initializeCarousel() {
     });
 
     carousel.dataset.swipeBound = "true";
+  }
+
+  if (carousel && !carousel.dataset.autoPauseBound) {
+    carousel.addEventListener("mouseenter", stopTimer);
+    carousel.addEventListener("mouseleave", startTimer);
+    carousel.addEventListener("focusin", stopTimer);
+    carousel.addEventListener("focusout", startTimer);
+    carousel.dataset.autoPauseBound = "true";
   }
 
   startTimer();

@@ -542,6 +542,7 @@
   gap: 0.8rem;
 }
 
+.page-numbers button,
 .page-numbers span {
   width: 40px;
   height: 40px;
@@ -552,13 +553,17 @@
   border-radius: 50%;
   transition: all 0.3s;
   font-weight: 500;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
 }
 
-.page-numbers span:hover:not(.ellipsis) {
+.page-numbers button:hover:not(.ellipsis) {
   background: #f2f2f2;
 }
 
-.page-numbers span.active {
+.page-numbers button.active {
   background: var(--color-primary);
   color: #fff;
 }
@@ -813,7 +818,8 @@
     justify-content: center;
     order: 2;
   }
-  .page-numbers span { width: 30px; height: 30px; font-size: 0.9rem; }
+  .page-numbers button,
+  .page-numbers span { width: 32px; height: 32px; font-size: 0.9rem; }
   .collab-wrapper { padding: 0 30px; }
   .scroll-btn { width: 30px; height: 30px; padding: 0.5rem; }
   .collab-item { width: 260px; padding: 1.5rem; min-width: 260px; }

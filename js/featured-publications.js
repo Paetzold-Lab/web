@@ -83,7 +83,7 @@ const HERO_TEASERS = {
   auto_6295fd2b61: "Synthetic OCTA data teaches VLMs clinical reasoning."
 };
 
-const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615x";
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260616a";
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -334,8 +334,15 @@ function openPaperZoom(src, title) {
   const modal = ensurePaperZoomModal();
   const img = modal.querySelector(".paper-zoom-image-wrap img");
   const caption = modal.querySelector(".paper-zoom-caption");
+  const dialog = modal.querySelector(".paper-zoom-dialog");
   modal.previousFocus = document.activeElement;
   if (img) {
+    dialog?.classList.remove("is-wide", "is-tall");
+    img.onload = () => {
+      const ratio = (img.naturalWidth || 1) / (img.naturalHeight || 1);
+      dialog?.classList.toggle("is-wide", ratio > 1.8);
+      dialog?.classList.toggle("is-tall", ratio < 0.85);
+    };
     img.src = src || "./images/publications/default.png";
     img.alt = title || "Featured research figure";
   }
