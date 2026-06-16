@@ -1139,7 +1139,8 @@
         "classification"
       ],
       "primary_category": "classification",
-      "thumbnail": "images/publications/thumbnails/robust__primitive__and_unsuper.jpg",
+      "thumbnail": "images/publications/manual_added/quality_estimation_segmentation_ensembles_figure1.jpg",
+      "thumbnail_source": "manual-crop",
       "featured": false,
       "featuredOrder": 999,
       "source_members": [
@@ -4593,7 +4594,7 @@
         "segmentation"
       ],
       "primary_category": "mri",
-      "thumbnail": "images/publications/thumbnails/auto/veritas_verifiable_epistemic_reasoning_for_image_derived_hypothesis_te_image.jpg",
+      "thumbnail": "images/publications/hero/auto_74ca8cdcb0-primary.jpg",
       "featured": true,
       "featuredOrder": 2,
       "source_members": [
@@ -4609,7 +4610,7 @@
       "promotion_rank": 2,
       "featured_reason": "Promoted: Lucas Stoffl VERITAS",
       "pdf_local_path": "data/cache/pdfs/veritas_verifiable_epistemic_reasoning_for_image_derived_hypothesis_te_df96add2fe.pdf",
-      "thumbnail_source": "pdf",
+      "thumbnail_source": "manual-crop",
       "auto_enriched": {
         "at": "2026-06-14T21:17:14+00:00",
         "llm": false,
@@ -5993,7 +5994,7 @@
         "detection"
       ],
       "primary_category": "microscopy",
-      "thumbnail": "images/publications/thumbnails/auto/synthetic_vasculature_and_pathology_enhance_vision_language_model_reas_image.jpg",
+      "thumbnail": "images/publications/hero/auto_6295fd2b61-primary.jpg",
       "featured": true,
       "featuredOrder": 6,
       "source_members": [
@@ -6014,7 +6015,7 @@
       "promotion_rank": 6,
       "featured_reason": "Promoted later: Chenjun Li MIDL",
       "pdf_local_path": "data/cache/pdfs/synthetic_vasculature_and_pathology_enhance_vision_language_model_reas_364a370ebd.pdf",
-      "thumbnail_source": "pdf",
+      "thumbnail_source": "manual-crop",
       "auto_enriched": {
         "at": "2026-06-14T21:17:38+00:00",
         "llm": false,

@@ -245,9 +245,15 @@ MANUAL_METADATA_OVERRIDES: Dict[str, Dict[str, Any]] = {
         "thumbnail": "images/publications/manual_added/collateral_flow_stroke_figure1.jpg",
         "thumbnail_source": "manual-crop",
     },
+    "pub038": {
+        "thumbnail": "images/publications/manual_added/quality_estimation_segmentation_ensembles_figure1.jpg",
+        "thumbnail_source": "manual-crop",
+    },
     "auto_74ca8cdcb0": {
         "url": "https://arxiv.org/abs/2604.12144",
         "pdf_link": "https://arxiv.org/pdf/2604.12144",
+        "thumbnail": "images/publications/hero/auto_74ca8cdcb0-primary.jpg",
+        "thumbnail_source": "manual-crop",
         "llm_tags": [
             "verifiable reasoning",
             "agentic systems",
@@ -344,6 +350,8 @@ MANUAL_METADATA_OVERRIDES: Dict[str, Dict[str, Any]] = {
         },
     },
     "auto_6295fd2b61": {
+        "thumbnail": "images/publications/hero/auto_6295fd2b61-primary.jpg",
+        "thumbnail_source": "manual-crop",
         "llm_tags": [
             "medical VLM",
             "synthetic vasculature",
