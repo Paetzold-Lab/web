@@ -83,7 +83,7 @@ const HERO_TEASERS = {
   auto_6295fd2b61: "Synthetic OCTA data teaches VLMs clinical reasoning."
 };
 
-const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615u";
+const DATA_VERSION = window.PaetzoldSite?.componentVersion || "20260615v";
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -244,6 +244,14 @@ function publicationImage(pub) {
   return normalizeLink(pub?.thumbnail) || "./images/publications/default.png";
 }
 
+function versionedImage(src) {
+  const link = normalizeLink(src);
+  if (!link || /^(?:https?:|data:|blob:)/i.test(link)) return link;
+  const url = new URL(link, window.location.href);
+  url.searchParams.set("v", DATA_VERSION);
+  return url.href;
+}
+
 function heroImageAttrs(slideIndex, imageIndex) {
   if (slideIndex === 0) {
     return imageIndex === 0
@@ -280,9 +288,10 @@ function heroCollageItems(pub) {
   return uniqueItems.map((item, offset) => {
     const figureLabel = item.label || pub?.title || "Featured research figure";
     const fullLabel = item.label ? `${pub?.title || "Featured research"} - ${item.label}` : figureLabel;
+    const src = normalizeLink(item.src) || publicationImage(pub);
     return {
       className: classes[offset],
-      src: normalizeLink(item.src) || publicationImage(pub),
+      src: versionedImage(src),
       position: item.position || "center",
       title: figureLabel,
       ariaLabel: fullLabel
